@@ -1,8 +1,29 @@
 using System.Collections.Generic;
+using System.Text;
+using System.Linq;
 
 namespace snakescript {
     class Lexer {
-        
+        private static bool isEven(int n) => n % 2 == 0;
+
+        public static string DeSnakeCode(string code) {
+            var newCode = new StringBuilder();
+
+            var lines = code.Split('\n');
+            // I just wanted to see if I could do this in a python style lol
+            foreach(var ind in Enumerable.Range(0, lines.Length)) {
+                if(isEven(ind)) {
+                    newCode.Append(lines[ind]);
+                } else {
+                    newCode.Append(
+                        lines[ind].ToCharArray().Reverse().ToArray()
+                    );
+                }
+            }
+
+            return newCode.ToString();
+        }
+
         public static SymbolToken[] Tokens(string code) {
             var tokens = new List<SymbolToken>();
 
@@ -30,5 +51,6 @@ namespace snakescript {
             }
 
             return tokens.ToArray();
+        }
     }
 }

@@ -18,6 +18,12 @@ namespace snakescript {
         public static Dictionary<Regex, TokenType> PatternsToTypes =
                 new Dictionary<Regex, TokenType>() {
             { 
+                new Regex(@"'(\\.|[^'])'", RegexOptions.Compiled),
+                TokenType.Char
+            }, { 
+                new Regex(@"'(\\.|[^'])*'", RegexOptions.Compiled),
+                TokenType.Str
+            }, { 
                 new Regex(@"([#@])|(\?\?)", RegexOptions.Compiled),
                 TokenType.RawTypeName
             }, { 
@@ -32,9 +38,6 @@ namespace snakescript {
                 new Regex(@"(\?t|\?f)", RegexOptions.Compiled),
                 TokenType.Bool
             }, { 
-                new Regex(@"'(\\.|[^'])'", RegexOptions.Compiled),
-                TokenType.Char
-            }, { 
                 new Regex(@"\[\?\]", RegexOptions.Compiled),
                 TokenType.WhileOp
             }, { 
@@ -44,10 +47,10 @@ namespace snakescript {
                 new Regex(@"(>>|><|<>)", RegexOptions.Compiled),
                 TokenType.StackOp
             }, { 
-                new Regex(@"(++|--|@@|\]\[|\[\])", RegexOptions.Compiled),
+                new Regex(@"(\+\+|--|@@|\]\[|\[\])", RegexOptions.Compiled),
                 TokenType.ListTupleOp
             }, { 
-                new Regex(@"[+-*\/\^]", RegexOptions.Compiled),
+                new Regex(@"[\+\-\*\/\^]", RegexOptions.Compiled),
                 TokenType.MathOp
             }, { 
                 new Regex(@"\?[><=!&\|]", RegexOptions.Compiled),
@@ -67,9 +70,6 @@ namespace snakescript {
             }, { 
                 new Regex(@"\?", RegexOptions.Compiled),
                 TokenType.ToBool
-            }, { 
-                new Regex(@"'(\\.|[^'])*'", RegexOptions.Compiled),
-                TokenType.Str
             }, { 
                 new Regex(@"\\", RegexOptions.Compiled),
                 TokenType.FuncDef
