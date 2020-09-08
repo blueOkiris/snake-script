@@ -35,3 +35,4 @@
 <while>         ::= <while-op> <body>
 <body>          ::= <l-brace> { <stmt> } <r-brace>
 <func-def>      ::= <func-op> <ident> <type-op> <type> <bool-op> <type> <body>
+<program>       ::= { <func-def> | <stmt> }
