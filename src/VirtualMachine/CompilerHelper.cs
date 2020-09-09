@@ -243,16 +243,56 @@ namespace snakescript {
         private static OpCode[] compileValue(CompoundToken value) {
             var opCodes = new List<OpCode>();
             
-            switch(value.Children[0].Type) {
+            Token subChild = value.Children[0];
+            switch(subChild.Type) {
                 case TokenType.Num:
-                case TokenType.Char:
-                case TokenType.Bool:
-                case TokenType.Ident:
                     opCodes.Add(
                         new OpCode(
                             Instruction.PushNum,
-                            (value.Children[0] as SymbolToken).Source
+                            (subChild as SymbolToken).Source
                         )
+                    );
+                    break;
+
+                case TokenType.Char:
+                    opCodes.Add(
+                        new OpCode(
+                            Instruction.PushChar,
+                            (subChild as SymbolToken).Source
+                        )
+                    );
+                    break;
+
+                case TokenType.Bool:
+                    opCodes.Add(
+                        new OpCode(
+                            Instruction.PushBool,
+                            (subChild as SymbolToken).Source
+                        )
+                    );
+                    break;
+
+                case TokenType.Ident:
+                    opCodes.Add(
+                        new OpCode(
+                            Instruction.PushIdent,
+                            (subChild as SymbolToken).Source
+                        )
+                    );
+                    break;
+                
+                case TokenType.Str:
+                    for(int i = (subChild as SymbolToken).Source.Length - 2;
+                            i >= 1; i--) {
+                        opCodes.Add(
+                            new OpCode(
+                                Instruction.PushChar,
+                                (subChild as SymbolToken).Source[i] + ""
+                            )
+                        );
+                    }
+                    opCodes.Add(
+                        new OpCode(Instruction.PopItemsOfSameTypePushList)
                     );
                     break;
             }
