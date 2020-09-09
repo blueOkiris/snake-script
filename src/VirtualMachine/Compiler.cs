@@ -48,7 +48,15 @@ namespace snakescript {
                         }
                         break;
                     
+                    // <func-call> ::= <l-parenth> <ident> <r-parenth>
                     case TokenType.FuncCall:
+                        opCodes.Add(
+                            new OpCode(
+                                Instruction.FuncCall,
+                                ((child as CompoundToken)
+                                    .Children[1] as SymbolToken).Source
+                            )
+                        );
                         break;
 
                     case TokenType.Return:

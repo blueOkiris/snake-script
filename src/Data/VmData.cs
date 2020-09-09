@@ -21,7 +21,7 @@ namespace snakescript {
         PopStrPushAny,
 
         // Flow control
-        Label, Goto
+        Label, Goto, FuncCall
     }
 
     struct OpCode {
