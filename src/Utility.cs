@@ -1,4 +1,3 @@
-using System.Text.RegularExpressions;
 using System.Collections.Generic;
 using System.Text;
 
@@ -7,95 +6,11 @@ namespace snakescript {
         RawTypeName, Ident, Num, Bool, Char, WhileOp, Return, StackOp,
         ListTupleOp, MathOp, BoolOp, MakeTuple, ToStr, ToChr, ParseStr, ToBool,
         Str, FuncOp, LBracket, RBracket, LParenth, RParenth, LBrace, RBrace,
-        TypeOp,
+        TypeOp, ToOp,
         
         TypeName, List, Tuple, Value, Op, FuncCall, Stmt, While, Body, FuncDef,
 
         Program
-    }
-
-    class TokenRegExs {
-        public static Dictionary<Regex, TokenType> PatternsToTypes =
-                new Dictionary<Regex, TokenType>() {
-            { 
-                new Regex(@"'(\\.|[^'])'", RegexOptions.Compiled),
-                TokenType.Char
-            }, { 
-                new Regex(@"'(\\.|[^'])*'", RegexOptions.Compiled),
-                TokenType.Str
-            }, { 
-                new Regex(@"([#@])|(\?\?)", RegexOptions.Compiled),
-                TokenType.RawTypeName
-            }, { 
-                new Regex(@"[A-Za-z_]+", RegexOptions.Compiled),
-                TokenType.Ident
-            }, { 
-                new Regex(
-                    @"([0-9]+\.?|[0-9]*\.[0-9]+)(e[0-9]+)?",
-                    RegexOptions.Compiled
-                ), TokenType.Num
-            }, { 
-                new Regex(@"(\?t|\?f)", RegexOptions.Compiled),
-                TokenType.Bool
-            }, { 
-                new Regex(@"\[\?\]", RegexOptions.Compiled),
-                TokenType.WhileOp
-            }, { 
-                new Regex(@"<<", RegexOptions.Compiled),
-                TokenType.Return
-            }, { 
-                new Regex(@"(>>|><|<>)", RegexOptions.Compiled),
-                TokenType.StackOp
-            }, { 
-                new Regex(@"(\+\+|--|@@|\]\[|\[\])", RegexOptions.Compiled),
-                TokenType.ListTupleOp
-            }, { 
-                new Regex(@"[\+\-\*\/\^]", RegexOptions.Compiled),
-                TokenType.MathOp
-            }, { 
-                new Regex(@"\?[><=!&\|]", RegexOptions.Compiled),
-                TokenType.BoolOp
-            }, { 
-                new Regex(@"\(\)", RegexOptions.Compiled),
-                TokenType.MakeTuple
-            }, { 
-                new Regex(@"\$", RegexOptions.Compiled),
-                TokenType.ToStr
-            }, { 
-                new Regex(@"`", RegexOptions.Compiled),
-                TokenType.ToChr
-            }, { 
-                new Regex(@"!\?", RegexOptions.Compiled),
-                TokenType.ParseStr
-            }, { 
-                new Regex(@"\?", RegexOptions.Compiled),
-                TokenType.ToBool
-            }, { 
-                new Regex(@"\\", RegexOptions.Compiled),
-                TokenType.FuncDef
-            }, { 
-                new Regex(@"\[", RegexOptions.Compiled),
-                TokenType.LBracket
-            }, { 
-                new Regex(@"\]", RegexOptions.Compiled),
-                TokenType.RBracket
-            }, { 
-                new Regex(@"\(", RegexOptions.Compiled),
-                TokenType.LParenth
-            }, { 
-                new Regex(@"\)", RegexOptions.Compiled),
-                TokenType.RParenth
-            }, { 
-                new Regex(@"\{", RegexOptions.Compiled),
-                TokenType.LBrace
-            }, { 
-                new Regex(@"\}", RegexOptions.Compiled),
-                TokenType.RBrace
-            }, { 
-                new Regex(@":", RegexOptions.Compiled),
-                TokenType.TypeOp
-            }
-        };
     }
 
     class Token {
@@ -119,9 +34,16 @@ namespace snakescript {
         }
 
         public override string ToString() {
-            return
-                "Symbol Token: { '" + Source
-                    + "', (" + Line + ":" + Pos + "), " + Type + " }";
+            if(Line % 2 == 0) {
+                return
+                    "Symbol Token: { '" + Source
+                        + "', (" + Line + ":" + Pos + "), " + Type + " }";
+            } else {
+                return
+                    "Symbol Token: { '" + Source
+                        + "', (" + Line + ":" + (80 - Pos) + "), " + Type
+                        + " }";
+            }
         }
     }
 

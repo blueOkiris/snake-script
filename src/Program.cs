@@ -29,7 +29,7 @@ namespace snakescript {
                 } catch(Exception e) {
                     Console.WriteLine("Error reading file: '" + fileName + "'");
                     Console.WriteLine(e.Message);
-                    Environment.Exit(1);
+                    Environment.Exit(-1);
                 }
 
                 var deSnakedCode = Lexer.DeSnakeCode(code);
@@ -42,6 +42,19 @@ namespace snakescript {
                     foreach(var token in tokens) {
                         Console.WriteLine(token);
                     }
+                }
+
+                CompoundToken ast = null;
+                try {
+                    ast = Parser.BuildProgram(tokens);
+                } catch(ParserException pe) {
+                    Console.WriteLine("Parser Error: " + pe.Message);
+                    Environment.Exit(-1);
+                }
+                if(debug && ast != null) {
+                    Console.WriteLine();
+                    Console.WriteLine("Parser Output:");
+                    Console.WriteLine(ast);
                 }
             }
         }

@@ -31,7 +31,8 @@
 <value>         ::= <ident> | <char> | <num> | <bool> | <str> | <list> | <tuple>
 <op>            ::= <stack-op> | <math-op> | <bool-op> | <ls-tp-op>
 <func-call>     ::= <l-parenth> <ident> <r-parenth>
-<stmt>          ::= <op> | <while> | <func-call> | <return>
+<stmt>          ::= <op> | <while> | <func-call> | <return> | <value> | <to-str>
+                    | <to-chr> | <mk-tup> | <parse-str> | <to-bool>
 <while>         ::= <while-op> <body>
 <body>          ::= <l-brace> { <stmt> } <r-brace>
 <func-def>      ::= <func-op> <ident> <type-op> <type> <bool-op> <type> <body>
