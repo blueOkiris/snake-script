@@ -67,6 +67,129 @@ namespace snakescript {
                         Console.Write(tos.ToString());
                     }
                     break;
+
+                case Instruction.Pop2PushSum: {
+                        if(localStack.Count < 2) {
+                            throw new StackUnderflowException();
+                        }
+                        var tos = localStack.Pop();
+                        var sos = localStack.Pop();
+                        if(!VmValue.ShareType(tos, new VmNum(0))) {
+                            throw new TypeException(
+                                tos.Types, (new VmNum(0)).Types
+                            );
+                        }
+                        if(!VmValue.ShareType(sos, new VmNum(0))) {
+                            throw new TypeException(
+                                sos.Types, (new VmNum(0)).Types
+                            );
+                        }
+
+                        localStack.Push(
+                            new VmNum((sos as VmNum).Value
+                            + (tos as VmNum).Value)
+                        );
+                    }
+                    break;
+
+                case Instruction.Pop2PushDifference: {
+                        if(localStack.Count < 2) {
+                            throw new StackUnderflowException();
+                        }
+                        var tos = localStack.Pop();
+                        var sos = localStack.Pop();
+                        if(!VmValue.ShareType(tos, new VmNum(0))) {
+                            throw new TypeException(
+                                tos.Types, (new VmNum(0)).Types
+                            );
+                        }
+                        if(!VmValue.ShareType(sos, new VmNum(0))) {
+                            throw new TypeException(
+                                sos.Types, (new VmNum(0)).Types
+                            );
+                        }
+
+                        localStack.Push(
+                            new VmNum((sos as VmNum).Value
+                            - (tos as VmNum).Value)
+                        );
+                    }
+                    break;
+
+                case Instruction.Pop2PushProduct: {
+                        if(localStack.Count < 2) {
+                            throw new StackUnderflowException();
+                        }
+                        var tos = localStack.Pop();
+                        var sos = localStack.Pop();
+                        if(!VmValue.ShareType(tos, new VmNum(0))) {
+                            throw new TypeException(
+                                tos.Types, (new VmNum(0)).Types
+                            );
+                        }
+                        if(!VmValue.ShareType(sos, new VmNum(0))) {
+                            throw new TypeException(
+                                sos.Types, (new VmNum(0)).Types
+                            );
+                        }
+
+                        localStack.Push(
+                            new VmNum((sos as VmNum).Value
+                            * (tos as VmNum).Value)
+                        );
+                    }
+                    break;
+
+                case Instruction.Pop2PushQuotient: {
+                        if(localStack.Count < 2) {
+                            throw new StackUnderflowException();
+                        }
+                        var tos = localStack.Pop();
+                        var sos = localStack.Pop();
+                        if(!VmValue.ShareType(tos, new VmNum(0))) {
+                            throw new TypeException(
+                                tos.Types, (new VmNum(0)).Types
+                            );
+                        }
+                        if(!VmValue.ShareType(sos, new VmNum(0))) {
+                            throw new TypeException(
+                                sos.Types, (new VmNum(0)).Types
+                            );
+                        }
+
+                        localStack.Push(
+                            new VmNum((sos as VmNum).Value
+                            / (tos as VmNum).Value)
+                        );
+                    }
+                    break;
+
+                case Instruction.Pop2PushPower: {
+                        if(localStack.Count < 2) {
+                            throw new StackUnderflowException();
+                        }
+                        var tos = localStack.Pop();
+                        var sos = localStack.Pop();
+                        if(!VmValue.ShareType(tos, new VmNum(0))) {
+                            throw new TypeException(
+                                tos.Types, (new VmNum(0)).Types
+                            );
+                        }
+                        if(!VmValue.ShareType(sos, new VmNum(0))) {
+                            throw new TypeException(
+                                sos.Types, (new VmNum(0)).Types
+                            );
+                        }
+
+                        localStack.Push(
+                            new VmNum(
+                                Math.Pow(
+                                    (sos as VmNum).Value, (tos as VmNum).Value
+                                )
+                            )
+                        );
+                    }
+                    break;
                 
                 case Instruction.PopAnyPushStr: {
                         if(localStack.Count < 1) {
@@ -109,7 +232,7 @@ namespace snakescript {
                         var tos = localStack.Pop();
                         var sos = localStack.Pop();
 
-                        var tup = new VmTuple(tos, sos, tos.Types, sos.Types);
+                        var tup = new VmTuple(sos, tos, sos.Types, tos.Types);
                         localStack.Push(tup);
                     }
                     break;
