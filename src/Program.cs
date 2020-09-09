@@ -63,7 +63,12 @@ namespace snakescript {
                 }
                 var vm = new VirtualMachine(insts.Item1, insts.Item2);
 
-                vm.Run();
+                try {
+                    vm.Run();
+                } catch(Exception e) {
+                    Console.WriteLine("Runtime Error: " + e.Message);
+                    Environment.Exit(-1);
+                }
             }
         }
     }

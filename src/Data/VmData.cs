@@ -105,10 +105,21 @@ namespace snakescript {
     struct VmStackFrame {
         public Dictionary<string, VmVar> CurrentVariables;
         public Stack<VmValue> LocalStack;
+        public Stack<OpCode> OpCodes;
+        public VmValueType[] ReturnTypes;
 
-        public VmStackFrame(Stack<VmValue> initialStack) {
+        public VmStackFrame(
+                Stack<VmValue> initialStack, OpCode[] opCodes,
+                VmValueType[] returnTypes) {
             LocalStack = initialStack;
             CurrentVariables = new Dictionary<string, VmVar>();
+            
+            OpCodes = new Stack<OpCode>();
+            for(int i = opCodes.Length - 1; i >= 0; i--) {
+                OpCodes.Push(opCodes[i]);
+            }
+
+            ReturnTypes = returnTypes;
         }
     }
 
@@ -118,10 +129,24 @@ namespace snakescript {
     }
 
     class VmValue {
-        public VmValueType[] Type;
+        public VmValueType[] Types;
 
-        public VmValue(VmValueType[] type) {
-            Type = type;
+        public VmValue(VmValueType[] types) {
+            Types = types;
+        }
+
+        public static bool ShareType(VmValue val1, VmValue val2) {
+            if(val1.Types.Length != val2.Types.Length) {
+                return false;
+            }
+
+            for(int i = 0; i < val1.Types.Length; i++) {
+                if(val1.Types[i] != val2.Types[i]) {
+                    return false;
+                }
+            }
+
+            return true;
         }
     }
 
