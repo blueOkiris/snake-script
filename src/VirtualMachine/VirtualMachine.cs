@@ -67,6 +67,23 @@ namespace snakescript {
                         Console.Write(tos.ToString());
                     }
                     break;
+                
+                case Instruction.Round: {
+                        if(localStack.Count < 1) {
+                            throw new StackUnderflowException();
+                        }
+                        var tos = localStack.Pop();
+                        if(!VmValue.ShareType(tos, new VmNum(0))) {
+                            throw new TypeException(
+                                tos.Types, (new VmNum(0)).Types
+                            );
+                        }
+
+                        localStack.Push(
+                            new VmNum(Math.Round((tos as VmNum).Value))
+                        );
+                    }
+                    break;
 
                 case Instruction.Pop2PushSum: {
                         if(localStack.Count < 2) {
