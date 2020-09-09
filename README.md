@@ -68,7 +68,7 @@ The input and return types can be any of the ones mentioned above, however, they
  
  * `(` `)` for tuples
  
-So as an example, `[[(#([#](??,[@])))]]` would be a list of lists of tuples of numbers and tuples of lists of numbers and tuples of booleans and lists of characters.
+So as an example, `[[(#([#](??[@])))]]` would be a list of lists of tuples of numbers and tuples of lists of numbers and tuples of booleans and lists of characters.
 
 ### While Loops
 
