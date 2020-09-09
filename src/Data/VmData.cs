@@ -21,7 +21,7 @@ namespace snakescript {
         PopStrPushAny,
 
         // Flow control
-        Label, Goto, FuncCall,
+        WhileStart, WhileEnd, FuncCall,
 
         // Values
         PushNum, PushChar, PushBool, PushIdent

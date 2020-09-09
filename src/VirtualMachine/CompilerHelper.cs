@@ -2,7 +2,7 @@ using System.Collections.Generic;
 
 namespace snakescript {
     partial class Compiler {
-        public static int LabelInd = 0;
+        public static int WhileInd = 0;
 
         private static VmValueType[] valueTypeFromStr(SymbolToken typeTok) {
             switch(typeTok.Source) {
@@ -222,7 +222,7 @@ namespace snakescript {
         private static OpCode[] compileWhile(CompoundToken wh) {
             var opCodes = new List<OpCode>();
 
-            opCodes.Add(new OpCode(Instruction.Label, "Lbl_" + LabelInd));
+            opCodes.Add(new OpCode(Instruction.WhileStart, "WH_" + WhileInd));
             var body = wh.Children[1] as CompoundToken;
             for(int i = 1; i < body.Children.Length - 1; i++) {
                 var stmtCodes = compileStmt(body.Children[i] as CompoundToken);
@@ -230,8 +230,8 @@ namespace snakescript {
                     opCodes.Add(opCode);
                 }
             }
-            opCodes.Add(new OpCode(Instruction.Goto, "Lbl_" + LabelInd));
-            LabelInd++;
+            opCodes.Add(new OpCode(Instruction.WhileEnd, "EW_" + WhileInd));
+            WhileInd++;
 
             return opCodes.ToArray();
         }

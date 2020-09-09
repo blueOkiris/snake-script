@@ -49,24 +49,10 @@ namespace snakescript {
                     }
                     break;
                 
-                case Instruction.Return: {
-                        var tos = localStack.Pop();
-                        if(!VmValue.ShareType(
-                                tos, new VmValue(stackFrame.ReturnTypes))) {
-                            throw new TypeException(
-                                stackFrame.ReturnTypes, tos.Types
-                            );
-                        }
-
-                        stackFrame = CallStack.Pop();
-                        stackFrame.LocalStack.Push(tos);
-                    }
-                    break;
-                
                 case Instruction.Input: {
                         var input = Console.ReadLine();
                         var chars = new List<VmValue>();
-                        for(int i = input.Length - 1; i >= 0; i--) {
+                        for(int i = 0; i < input.Length; i++) {
                             chars.Add(new VmChar(input[i]));
                         }
                         localStack.Push(new VmList(VmValueType.Chr, chars));
@@ -74,6 +60,9 @@ namespace snakescript {
                     break;
                 
                 case Instruction.Print: {
+                        if(localStack.Count < 1) {
+                            throw new StackUnderflowException();
+                        }
                         var tos = localStack.Pop();
                         Console.Write(tos.ToString());
                     }
@@ -191,6 +180,9 @@ namespace snakescript {
                     break;
                 
                 case Instruction.FuncCall: {
+                        if(localStack.Count < 1) {
+                            throw new StackUnderflowException();
+                        }
                         var tos = localStack.Pop();
                         var newLocal = new Stack<VmValue>();
                         newLocal.Push(tos);
@@ -208,6 +200,60 @@ namespace snakescript {
                             newLocal, function.OpCodes, function.OutputTypes
                         );
                         stackFrame.InstructionCounter = -1;
+                    }
+                    break;
+                
+                case Instruction.Return: {
+                        var tos = localStack.Pop();
+                        if(!VmValue.ShareType(
+                                tos, new VmValue(stackFrame.ReturnTypes))) {
+                            throw new TypeException(
+                                stackFrame.ReturnTypes, tos.Types
+                            );
+                        }
+
+                        stackFrame = CallStack.Pop();
+                        stackFrame.LocalStack.Push(tos);
+                    }
+                    break;
+                
+                case Instruction.WhileStart: {
+                        if(localStack.Count < 1) {
+                            throw new StackUnderflowException();
+                        }
+                        var tos = localStack.Pop();
+                        if(!VmValue.ShareType(tos, new VmBool(true))) {
+                            throw new TypeException(
+                                new VmBool(true).Types, tos.Types
+                            );
+                        }
+
+                        if(!(tos as VmBool).Value) {
+                            var endLabelName =
+                                opCode.Argument.Replace("WH", "EW");
+                            while(stackFrame.OpCodes[
+                                        stackFrame.InstructionCounter
+                                    ].Inst != Instruction.WhileEnd
+                                    || stackFrame.OpCodes[
+                                            stackFrame.InstructionCounter
+                                    ].Argument != endLabelName) {
+                                stackFrame.InstructionCounter++;
+                            }
+                        }
+                    }
+                    break;
+                
+                case Instruction.WhileEnd: {
+                        var startLabelName =
+                            opCode.Argument.Replace("EW", "WH");
+                        while(stackFrame.OpCodes[
+                                    stackFrame.InstructionCounter
+                                ].Inst != Instruction.WhileStart
+                                || stackFrame.OpCodes[
+                                        stackFrame.InstructionCounter
+                                ].Argument != startLabelName) {
+                            stackFrame.InstructionCounter--;
+                        }
                     }
                     break;
             }
