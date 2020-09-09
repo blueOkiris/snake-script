@@ -6,13 +6,16 @@ namespace snakescript {
     }
 
     struct Function {
-        public VmValueType InputType;
-        public VmValueType OutputType;
+        public VmValueType[] InputType;
+        public VmValueType[] OutputType;
+        public string Name;
         public OpCode[] OpCodes;
 
         public Function(
-                VmValueType inputType, VmValueType outputType,
+                string name, 
+                VmValueType[] inputType, VmValueType[] outputType,
                 OpCode[] opCodes) {
+            Name = name;
             InputType = inputType;
             OutputType = outputType;
             OpCodes = opCodes;
@@ -35,9 +38,9 @@ namespace snakescript {
     }
 
     class VmValue {
-        public VmValueType Type;
+        public VmValueType[] Type;
 
-        public VmValue(VmValueType type) {
+        public VmValue(VmValueType[] type) {
             Type = type;
         }
     }
@@ -45,7 +48,8 @@ namespace snakescript {
     class VmChar : VmValue {
         public char Value;
 
-        public VmChar(char value) : base(VmValueType.Chr) {
+        public VmChar(char value)
+                : base(new VmValueType[] { VmValueType.Chr }) {
             Value = value;
         }
     }
@@ -53,7 +57,8 @@ namespace snakescript {
     class VmNum : VmValue {
         public double Value;
 
-        public VmNum(double value) : base(VmValueType.Num) {
+        public VmNum(double value)
+                : base(new VmValueType[] { VmValueType.Num }) {
             Value = value;
         }
     }
@@ -61,41 +66,46 @@ namespace snakescript {
     class VmBool : VmValue {
         public bool Value;
 
-        public VmBool(bool value) : base(VmValueType.Bool) {
+        public VmBool(bool value)
+                : base(new VmValueType[] { VmValueType.Bool }) {
             Value = value;
         }
     }
 
     class VmUnDef : VmValue {
-        public VmUnDef() : base(VmValueType.UndDef) {}
+        public VmUnDef()
+            : base(new VmValueType[] { VmValueType.UndDef }) {}
     }
 
     class VmVar : VmValue {
         public string Name;
         public VmValue Value;
 
-        public VmVar(string name) : base(VmValueType.Var) {
+        public VmVar(string name)
+                : base(new VmValueType[] { VmValueType.Var }) {
             Name = name;
             Value = new VmUnDef();
         }
     }
 
-    class VmList<T> : VmValue {
-        public List<T> Values;
-        public VmValueType SubType;
+    class VmList : VmValue {
+        public List<VmValue> Values;
 
-        public VmList(VmValueType subType, List<T> values)
-                : base(VmValueType.Ls) {
+        public VmList(VmValueType subType, List<VmValue> values)
+                : base(new VmValueType[] { VmValueType.Ls, subType }) {
             Values = values;
-            SubType = subType;
         }
     }
 
-    class VmTuple<T1, T2> : VmValue {
-        public T1 Item1;
-        public T2 Item2;
+    class VmTuple : VmValue {
+        public VmValue Item1, Item2;
         
-        public VmTuple(T1 item1, T2 item2) : base(VmValueType.Tup) {
+        public VmTuple(
+                VmValue item1, VmValue item2,
+                VmValueType subType1, VmValueType subType2)
+                : base(
+                    new VmValueType[] { VmValueType.Tup, subType1, subType2 } 
+                ) {
             Item1 = item1;
             Item2 = item2;
         }
