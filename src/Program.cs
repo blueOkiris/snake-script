@@ -32,7 +32,13 @@ namespace snakescript {
                     Environment.Exit(-1);
                 }
 
-                var deSnakedCode = Lexer.DeSnakeCode(code);
+                var deSnakedCode = "";
+                try {
+                    deSnakedCode = Lexer.DeSnakeCode(code);
+                } catch(Exception e) {
+                    Console.WriteLine("Desnaking Error: " + e.Message);
+                    Environment.Exit(-1);
+                }
                 var tokens = Lexer.Tokens(deSnakedCode);
                 if(debug) {
                     Console.WriteLine("Desnaked code:");
