@@ -141,10 +141,35 @@ namespace snakescript {
                             );
                         }
 
-                        localStack.Push(
-                            new VmNum((sos as VmNum).Value
-                            + (tos as VmNum).Value)
-                        );
+                        if(tos is VmVar && sos is VmVar) {
+                            localStack.Push(
+                                new VmNum(
+                                    ((sos as VmVar).Value as VmNum).Value
+                                    + ((tos as VmVar).Value as VmNum).Value
+                                )
+                            );
+                        } else if(tos is VmVar) {
+                            localStack.Push(
+                                new VmNum(
+                                    (sos as VmNum).Value
+                                    + ((tos as VmVar).Value as VmNum).Value
+                                )
+                            );
+                        } else if(sos is VmVar) {
+                            localStack.Push(
+                                new VmNum(
+                                    ((sos as VmVar).Value as VmNum).Value
+                                    + (tos as VmNum).Value
+                                )
+                            );
+                        } else {
+                            localStack.Push(
+                                new VmNum(
+                                    (sos as VmNum).Value
+                                    + (tos as VmNum).Value
+                                )
+                            );
+                        }
                     }
                     break;
 
@@ -165,10 +190,35 @@ namespace snakescript {
                             );
                         }
 
-                        localStack.Push(
-                            new VmNum((sos as VmNum).Value
-                            - (tos as VmNum).Value)
-                        );
+                        if(tos is VmVar && sos is VmVar) {
+                            localStack.Push(
+                                new VmNum(
+                                    ((sos as VmVar).Value as VmNum).Value
+                                    - ((tos as VmVar).Value as VmNum).Value
+                                )
+                            );
+                        } else if(tos is VmVar) {
+                            localStack.Push(
+                                new VmNum(
+                                    (sos as VmNum).Value
+                                    - ((tos as VmVar).Value as VmNum).Value
+                                )
+                            );
+                        } else if(sos is VmVar) {
+                            localStack.Push(
+                                new VmNum(
+                                    ((sos as VmVar).Value as VmNum).Value
+                                    - (tos as VmNum).Value
+                                )
+                            );
+                        } else {
+                            localStack.Push(
+                                new VmNum(
+                                    (sos as VmNum).Value
+                                    - (tos as VmNum).Value
+                                )
+                            );
+                        }
                     }
                     break;
 
@@ -189,10 +239,35 @@ namespace snakescript {
                             );
                         }
 
-                        localStack.Push(
-                            new VmNum((sos as VmNum).Value
-                            * (tos as VmNum).Value)
-                        );
+                        if(tos is VmVar && sos is VmVar) {
+                            localStack.Push(
+                                new VmNum(
+                                    ((sos as VmVar).Value as VmNum).Value
+                                    * ((tos as VmVar).Value as VmNum).Value
+                                )
+                            );
+                        } else if(tos is VmVar) {
+                            localStack.Push(
+                                new VmNum(
+                                    (sos as VmNum).Value
+                                    * ((tos as VmVar).Value as VmNum).Value
+                                )
+                            );
+                        } else if(sos is VmVar) {
+                            localStack.Push(
+                                new VmNum(
+                                    ((sos as VmVar).Value as VmNum).Value
+                                    * (tos as VmNum).Value
+                                )
+                            );
+                        } else {
+                            localStack.Push(
+                                new VmNum(
+                                    (sos as VmNum).Value
+                                    * (tos as VmNum).Value
+                                )
+                            );
+                        }
                     }
                     break;
 
@@ -213,10 +288,35 @@ namespace snakescript {
                             );
                         }
 
-                        localStack.Push(
-                            new VmNum((sos as VmNum).Value
-                            / (tos as VmNum).Value)
-                        );
+                        if(tos is VmVar && sos is VmVar) {
+                            localStack.Push(
+                                new VmNum(
+                                    ((sos as VmVar).Value as VmNum).Value
+                                    / ((tos as VmVar).Value as VmNum).Value
+                                )
+                            );
+                        } else if(tos is VmVar) {
+                            localStack.Push(
+                                new VmNum(
+                                    (sos as VmNum).Value
+                                    / ((tos as VmVar).Value as VmNum).Value
+                                )
+                            );
+                        } else if(sos is VmVar) {
+                            localStack.Push(
+                                new VmNum(
+                                    ((sos as VmVar).Value as VmNum).Value
+                                    / (tos as VmNum).Value
+                                )
+                            );
+                        } else {
+                            localStack.Push(
+                                new VmNum(
+                                    (sos as VmNum).Value
+                                    / (tos as VmNum).Value
+                                )
+                            );
+                        }
                     }
                     break;
 
@@ -236,14 +336,44 @@ namespace snakescript {
                                 sos.Types, (new VmNum(0)).Types
                             );
                         }
-
-                        localStack.Push(
-                            new VmNum(
-                                Math.Pow(
-                                    (sos as VmNum).Value, (tos as VmNum).Value
+                        
+                        if(tos is VmVar && sos is VmVar) {
+                            localStack.Push(
+                                new VmNum(
+                                    Math.Pow(
+                                        ((sos as VmVar).Value as VmNum).Value,
+                                        ((tos as VmVar).Value as VmNum).Value
+                                    )
                                 )
-                            )
-                        );
+                            );
+                        } else if(tos is VmVar) {
+                            localStack.Push(
+                                new VmNum(
+                                    Math.Pow(
+                                        (sos as VmNum).Value,
+                                        ((tos as VmVar).Value as VmNum).Value
+                                    )
+                                )
+                            );
+                        } else if(sos is VmVar) {
+                            localStack.Push(
+                                new VmNum(
+                                    Math.Pow(
+                                        ((sos as VmVar).Value as VmNum).Value,
+                                        (tos as VmNum).Value
+                                    )
+                                )
+                            );
+                        } else {
+                            localStack.Push(
+                                new VmNum(
+                                    Math.Pow(
+                                        (sos as VmNum).Value,
+                                        (tos as VmNum).Value
+                                    )
+                                )
+                            );
+                        }
                     }
                     break;
 
@@ -385,6 +515,22 @@ namespace snakescript {
                         localStack.Push(
                             new VmChar((char) (tos as VmNum).Value)
                         );
+                    }
+                    break;
+                
+                case Instruction.PopItemsOfSameTypePushList: {
+                        if(localStack.Count < 1) {
+                            throw new StackUnderflowException();
+                        }
+                        var lsTypes = localStack.Peek().Types;
+                        var items = new List<VmValue>();
+
+                        while(VmValue.ShareType(
+                                new VmValue(lsTypes), localStack.Peek())) {
+                            items.Add(localStack.Pop());
+                        }
+                        
+                        localStack.Push(new VmList(lsTypes, items));
                     }
                     break;
             
