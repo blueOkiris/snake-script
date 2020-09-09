@@ -68,7 +68,7 @@ namespace snakescript {
                     Console.WriteLine(Compiler.OutputString(insts));
                 }
                 var vm = new VirtualMachine(insts.Item1, insts.Item2, debug);
-
+                
                 try {
                     vm.Run();
                 } catch(Exception e) {
