@@ -201,7 +201,7 @@ namespace snakescript {
                             throw new TypeException(tos.Types, sos.Types);
                         }
 
-                        localStack.Push(new VmBool(VmValue.Equal(tos, sos)));
+                        localStack.Push(new VmBool(sos.CompareTo(tos) == 0));
                     }
                     break;
                 

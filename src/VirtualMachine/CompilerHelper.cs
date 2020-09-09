@@ -285,12 +285,24 @@ namespace snakescript {
                 case TokenType.Str:
                     for(int i = (subChild as SymbolToken).Source.Length - 2;
                             i >= 1; i--) {
-                        opCodes.Add(
-                            new OpCode(
-                                Instruction.PushChar,
-                                (subChild as SymbolToken).Source[i] + ""
-                            )
-                        );
+                        if((subChild as SymbolToken).Source[i - 1] == '\\') {
+                            opCodes.Add(
+                                new OpCode(
+                                    Instruction.PushChar,
+                                    "'\\" + (subChild as SymbolToken).Source[i]
+                                    + "'"
+                                )
+                            );
+                            i--;
+                        } else {
+                            opCodes.Add(
+                                new OpCode(
+                                    Instruction.PushChar,
+                                    "'" + (subChild as SymbolToken).Source[i] 
+                                    + "'"
+                                )
+                            );
+                        }
                     }
                     opCodes.Add(
                         new OpCode(Instruction.PopItemsOfSameTypePushList)

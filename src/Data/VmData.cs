@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -130,7 +131,7 @@ namespace snakescript {
         Ls, Tup, UndDef
     }
 
-    class VmValue {
+    class VmValue : IComparable<VmValue> {
         public VmValueType[] Types;
 
         public VmValue(VmValueType[] types) {
@@ -151,46 +152,48 @@ namespace snakescript {
             return true;
         }
 
-        public static bool Equal(VmValue val1, VmValue val2) {
-            if(val1.Types[0] == VmValueType.Ls) {
-                if((val1 as VmList).Values.Count
-                        != (val2 as VmList).Values.Count) {
-                    return false;
+        public int CompareTo(VmValue other) {
+            if(Types[0] == VmValueType.Ls) {
+                if((this as VmList).Values.Count
+                        != (other as VmList).Values.Count) {
+                    return 0;
                 } else {
-                    for(int i = 0; i < (val1 as VmList).Values.Count; i++) {
-                        var equal = VmValue.Equal(
-                            (val1 as VmList).Values[i],
-                            (val2 as VmList).Values[i]
+                    var comp = 0;
+                    for(int i = 0; i < (this as VmList).Values.Count; i++) {
+                        comp += (this as VmList).Values[i].CompareTo(
+                            (other as VmList).Values[i]
                         );
-
-                        if(!equal) {
-                            return false;
-                        }
                     }
 
-                    return true;
+                    return comp;
                 }
-            } else if(val1.Types[0] == VmValueType.Tup) {
-                var equal1 = VmValue.Equal(
-                    (val1 as VmTuple).Item1, (val2 as VmTuple).Item1
+            } else if(Types[0] == VmValueType.Tup) {
+                var comp1 = (this as VmTuple).Item1.CompareTo(
+                    (other as VmTuple).Item1
                 );
-                var equal2 = VmValue.Equal(
-                    (val1 as VmTuple).Item2, (val2 as VmTuple).Item2
+                var comp2 = (this as VmTuple).Item1.CompareTo(
+                    (other as VmTuple).Item1
                 );
 
-                return equal1 && equal2;
+                return comp1 + comp2;
             } else {
-                switch(val1.Types[0]) {
+                switch(Types[0]) {
                     case VmValueType.Num:
-                        return (val1 as VmNum).Value == (val2 as VmNum).Value;
+                        return (this as VmNum).Value.CompareTo(
+                            (other as VmNum).Value
+                        );
                     case VmValueType.Chr:
-                        return (val1 as VmChar).Value == (val2 as VmChar).Value;
+                        return (this as VmNum).Value.CompareTo(
+                            (other as VmNum).Value
+                        );
                     case VmValueType.Bool:
-                        return (val1 as VmBool).Value == (val2 as VmBool).Value;
+                        return (this as VmNum).Value.CompareTo(
+                            (other as VmNum).Value
+                        );
                 }
             }
 
-            return false;
+            return 0;
         }
 
         public override string ToString() {
