@@ -58,6 +58,9 @@ namespace snakescript {
                 }
 
                 var insts = Compiler.Translate(ast);
+                if(debug) {
+                    Console.WriteLine(Compiler.OutputString(insts));
+                }
                 var vm = new VirtualMachine(insts.Item1, insts.Item2);
 
                 vm.Run();

@@ -1,24 +1,64 @@
 using System.Collections.Generic;
+using System.Text;
 
 namespace snakescript {
     enum OpCode {
-
+        // Ops
+        Pop, Duplicate, Swap,
+        Pop2PushSum, Pop2PushDifference, Pop2PushProduct, Pop2PushQuotient,
+        Pop2PushPower,
+        Pop2PushEqual, Pop2PushGreaterThan, Pop2PushLessThan, Pop1PushNot,
+        Pop2PushAnd, Pop2PushOr,
+        Pop2PushConcat, Pop2PushWithRemovedInd, Pop2PushListPushListAtInd,
+        PopListPushUnzipped, PopItemsOfSameTypePushList
     }
 
     struct Function {
-        public VmValueType[] InputType;
-        public VmValueType[] OutputType;
+        public VmValueType[] InputTypes;
+        public VmValueType[] OutputTypes;
         public string Name;
         public OpCode[] OpCodes;
 
         public Function(
                 string name, 
-                VmValueType[] inputType, VmValueType[] outputType,
+                VmValueType[] inputTypes, VmValueType[] outputTypes,
                 OpCode[] opCodes) {
             Name = name;
-            InputType = inputType;
-            OutputType = outputType;
+            InputTypes = inputTypes;
+            OutputTypes = outputTypes;
             OpCodes = opCodes;
+        }
+
+        public override string ToString() {
+            var funcStr = new StringBuilder();
+
+            funcStr.Append("Function ");
+            funcStr.Append(Name);
+            funcStr.Append(" : {");
+            foreach(var type in InputTypes) {
+                funcStr.Append(' ');
+                funcStr.Append(type);
+                if(type != InputTypes[InputTypes.Length - 1]) {
+                    funcStr.Append(',');
+                }
+            }
+            funcStr.Append(" } -> {");
+            foreach(var type in OutputTypes) {
+                funcStr.Append(' ');
+                funcStr.Append(type);
+                if(type != InputTypes[InputTypes.Length - 1]) {
+                    funcStr.Append(',');
+                }
+            }
+            funcStr.Append(" } {\n");
+            foreach(var opCode in OpCodes) {
+                funcStr.Append("     ");
+                funcStr.Append(opCode);
+                funcStr.Append('\n');
+            }
+            funcStr.Append('}');
+
+            return funcStr.ToString();
         }
     }
 

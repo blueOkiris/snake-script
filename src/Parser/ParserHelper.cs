@@ -6,8 +6,7 @@ namespace snakescript {
         // <op> ::= <stack-op> | <math-op> | <bool-op> | <ls-tp-op>
         private static bool isOperator(TokenType type) {
             return type == TokenType.StackOp || type == TokenType.MathOp
-                || type == TokenType.MathOp || type == TokenType.ListTupleOp
-                || type == TokenType.BoolOp;
+                || type == TokenType.ListTupleOp || type == TokenType.BoolOp;
         }
 
         // <stmt> ::= <op> | <while> | <func-call> | <return> | <value>
@@ -39,6 +38,8 @@ namespace snakescript {
                 children.Add(parseList(ref i, tokens));
             } else if(tokens[i].Type == TokenType.LParenth) {
                 children.Add(parseTuple(ref i, tokens));
+            } else {
+                children.Add(tokens[i]);
             }
 
             return new CompoundToken(TokenType.Value, children.ToArray());

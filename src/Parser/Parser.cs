@@ -90,6 +90,7 @@ namespace snakescript {
         }
 
         // <stmt> ::= <op> | <while> | <func-call> | <return> | <value>
+        //          | <to-str> | <to-chr> | <mk-tup> | <parse-str> | <to-bool>
         private static CompoundToken parseStmt(
                 ref int i, SymbolToken[] tokens) {
             var children = new List<Token>();
