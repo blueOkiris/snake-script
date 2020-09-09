@@ -73,7 +73,7 @@ namespace snakescript {
                     tokens[i - 1].Line, tokens[i - 1].Pos
                 );
             }
-            if(tokens[i].Type == TokenType.RParenth) {
+            if(tokens[i].Type != TokenType.RParenth) {
                 throw new ExpectedOtherTokenExecteption(
                     new TokenType[] { TokenType.RParenth }, tokens[i].Type,
                     tokens[i].Line, tokens[i].Pos

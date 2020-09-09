@@ -235,5 +235,14 @@ namespace snakescript {
 
             return opCodes.ToArray();
         }
+
+        // <value> ::= <ident> | <char> | <num> | <bool>
+        //              | <str> | <list> | <tuple>
+        // <list> ::= <l-bracket> { <value> } <r-bracket>
+        // <tuple> ::= <l-parenth> <value> <value> <r-parenth>
+        private static OpCode[] compileValue(CompoundToken value) {
+            var opCodes = new List<OpCode>();
+            return opCodes.ToArray();
+        }
     }
 }
