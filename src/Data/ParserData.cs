@@ -6,7 +6,7 @@ namespace snakescript {
         RawTypeName, Ident, Num, Bool, Char, WhileOp, Return, StackOp,
         ListTupleOp, MathOp, BoolOp, MakeTuple, ToStr, ToChr, ParseStr, ToBool,
         Str, FuncOp, LBracket, RBracket, LParenth, RParenth, LBrace, RBrace,
-        TypeOp, ToOp,
+        TypeOp, ToOp, IoOp, RoundOp,
         
         TypeName, List, Tuple, Value, Op, FuncCall, Stmt, While, Body, FuncDef,
 

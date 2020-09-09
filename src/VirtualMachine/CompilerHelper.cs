@@ -88,6 +88,22 @@ namespace snakescript {
             var opCodes = new List<OpCode>();
 
             switch(op.Children[0].Type) {
+                case TokenType.IoOp:
+                    switch((op.Children[0] as SymbolToken).Source) {
+                        case ".":
+                            opCodes.Add(OpCode.Print);
+                            break;
+                        
+                        case ",":
+                            opCodes.Add(OpCode.Input);
+                            break;
+                    }
+                    break;
+
+                case TokenType.RoundOp:
+                    opCodes.Add(OpCode.Round);
+                    break;
+                
                 case TokenType.StackOp:
                     switch((op.Children[0] as SymbolToken).Source) {
                         case ">>":

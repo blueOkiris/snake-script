@@ -50,6 +50,29 @@ namespace snakescript {
                     case TokenType.Return:
                         opCodes.Add(OpCode.Return);
                         break;
+
+                    case TokenType.Value:
+                        break;
+                    
+                    case TokenType.ToStr:
+                        opCodes.Add(OpCode.PopAnyPushStr);
+                        break;
+                    
+                    case TokenType.ToChr:
+                        opCodes.Add(OpCode.PopNumPushChr);
+                        break;
+
+                    case TokenType.ToBool:
+                        opCodes.Add(OpCode.PopNumChrPushBool);
+                        break;
+                    
+                    case TokenType.MakeTuple:
+                        opCodes.Add(OpCode.Pop2PushTuple);
+                        break;
+                    
+                    case TokenType.ParseStr:
+                        opCodes.Add(OpCode.PopStrPushAny);
+                        break;
                 }
             }
 

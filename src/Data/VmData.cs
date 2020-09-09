@@ -11,10 +11,14 @@ namespace snakescript {
         Pop2PushAnd, Pop2PushOr,
         Pop2PushConcat, Pop2PushWithRemovedInd, Pop2PushListPushListAtInd,
         PopListPushUnzipped, PopItemsOfSameTypePushList,
+        Print, Input,
+        Round,
 
         Return,
 
-
+        // Conversions
+        PopAnyPushStr, PopNumPushChr, PopNumChrPushBool, Pop2PushTuple,
+        PopStrPushAny
     }
 
     struct Function {
