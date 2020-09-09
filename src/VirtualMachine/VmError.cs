@@ -20,7 +20,7 @@ namespace snakescript {
                     message.Append(',');
                 }
             }
-            message.Append(" }, but received types { ");
+            message.Append(" }, but received types {");
             foreach(var type in actual) {
                 message.Append(' ');
                 message.Append(type);

@@ -55,7 +55,7 @@ namespace snakescript {
                         for(int i = 0; i < input.Length; i++) {
                             chars.Add(new VmChar(input[i]));
                         }
-                        localStack.Push(new VmList(VmValueType.Chr, chars));
+                        localStack.Push(new VmList(chars[0].Types, chars));
                     }
                     break;
                 
@@ -68,17 +68,88 @@ namespace snakescript {
                     }
                     break;
                 
+                case Instruction.PopAnyPushStr: {
+                        if(localStack.Count < 1) {
+                            throw new StackUnderflowException();
+                        }
+                        var tos = localStack.Pop();
+                        var valStr = tos.ToString();
+                        var valStrList = new List<VmValue>();
+                        foreach(var chr in valStr) {
+                            valStrList.Add(new VmChar(chr));
+                        }
+                        localStack.Push(
+                            new VmList(valStrList[0].Types, valStrList)
+                        );
+                    }
+                    break;
+            
+                case Instruction.PopNumPushChr: {
+                        if(localStack.Count < 1) {
+                            throw new StackUnderflowException();
+                        }
+                        var tos = localStack.Pop();
+                        if(!VmValue.ShareType(tos, new VmNum(0))) {
+                            throw new TypeException(
+                                new VmValueType[] { VmValueType.Num },
+                                tos.Types
+                            );
+                        }
+
+                        localStack.Push(
+                            new VmChar((char) (tos as VmNum).Value)
+                        );
+                    }
+                    break;
+            
+                case Instruction.Pop2PushTuple: {
+                        if(localStack.Count < 2) {
+                            throw new StackUnderflowException();
+                        }
+                        var tos = localStack.Pop();
+                        var sos = localStack.Pop();
+
+                        var tup = new VmTuple(tos, sos, tos.Types, sos.Types);
+                        localStack.Push(tup);
+                    }
+                    break;
+            
+                case Instruction.PopNumChrPushBool: {
+                        if(localStack.Count < 1) {
+                            throw new StackUnderflowException();
+                        }
+                        var tos = localStack.Pop();
+                        if(!VmValue.ShareType(tos, new VmNum(0))
+                                && !VmValue.ShareType(tos, new VmChar('0'))) {
+                            throw new TypeException(
+                                new VmValueType[] { 
+                                    VmValueType.Num,
+                                    VmValueType.Chr
+                                },
+                                tos.Types
+                            );
+                        }
+
+                        if(tos is VmNum) {
+                            localStack.Push(
+                                new VmBool((tos as VmNum).Value != 0)
+                            );
+                        } else if(tos is VmChar) {
+                            localStack.Push(
+                                new VmBool(((int) (tos as VmChar).Value) != 0)
+                            );
+                        }
+                    }
+                    break;
+
                 case Instruction.PopStrPushAny: {
                         if(localStack.Count < 1) {
                             throw new StackUnderflowException();
                         }
                         var tos = localStack.Pop();
                         if(!VmValue.ShareType(
-                                tos,
-                                new VmValue(
-                                    new VmValueType[] {
-                                        VmValueType.Ls, VmValueType.Chr
-                                    }
+                                tos, new VmList(
+                                    new VmChar(' ').Types, new List<VmValue>()
                                 )
                             )
                         ) {

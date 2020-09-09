@@ -218,9 +218,15 @@ namespace snakescript {
     class VmList : VmValue {
         public List<VmValue> Values;
 
-        public VmList(VmValueType subType, List<VmValue> values)
-                : base(new VmValueType[] { VmValueType.Ls, subType }) {
+        public VmList(VmValueType[] subTypes, List<VmValue> values)
+                : base(new VmValueType[] { VmValueType.Ls }) {
             Values = values;
+            var types = new List<VmValueType>();
+            types.Add(VmValueType.Ls);
+            foreach(var type in subTypes) {
+                types.Add(type);
+            }
+            Types = types.ToArray();
         }
 
         public override string ToString() {
@@ -251,12 +257,22 @@ namespace snakescript {
         
         public VmTuple(
                 VmValue item1, VmValue item2,
-                VmValueType subType1, VmValueType subType2)
+                VmValueType[] subTypes1, VmValueType[] subTypes2)
                 : base(
-                    new VmValueType[] { VmValueType.Tup, subType1, subType2 } 
+                    new VmValueType[] { VmValueType.Tup } 
                 ) {
             Item1 = item1;
             Item2 = item2;
+
+            var types = new List<VmValueType>();
+            types.Add(VmValueType.Tup);
+            foreach(var type in subTypes1) {
+                types.Add(type);
+            }
+            foreach(var type in subTypes2) {
+                types.Add(type);
+            }
+            Types = types.ToArray();
         }
 
         public override string ToString() {
