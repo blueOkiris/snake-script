@@ -7,20 +7,25 @@ namespace snakescript {
         public Stack<VmStackFrame> CallStack;
         public OpCode[] OpCodes;
         public Dictionary<string, Function> Functions;
+        public bool Debug;
 
-        public VirtualMachine(OpCode[] opCodes, Function[] functions) {
+        public VirtualMachine(OpCode[] opCodes, Function[] functions,
+                bool debug = false) {
             CallStack = new Stack<VmStackFrame>();
             OpCodes = opCodes;
             Functions = new Dictionary<string, Function>();
             foreach(var function in functions) {
                 Functions.Add(function.Name, function);
-            }
+            }Debug = debug;
         }
 
         private void execute(OpCode opCode, ref VmStackFrame stackFrame) {
             var localStack = stackFrame.LocalStack;
             var varLookup = stackFrame.CurrentVariables;
-
+            
+            if(Debug) {
+                //Console.WriteLine("Curr Inst: " + opCode);
+            }
             switch(opCode.Inst) {
                 case Instruction.Pop: {
                         if(localStack.Count < 1) {
@@ -518,6 +523,33 @@ namespace snakescript {
                     }
                     break;
                 
+                case Instruction.Pop2PushConcat: {
+                        if(localStack.Count < 2) {
+                            throw new StackUnderflowException();
+                        }
+                        var list2 = localStack.Pop();
+                        var list1 = localStack.Pop();
+                        
+                        if(!(list1 is VmList)) {
+                            throw new TypeException(
+                                new VmValueType[] { VmValueType.Ls },
+                                list1.Types
+                            );
+                        }
+                        if(!VmValue.ShareType(list1, list2)) {
+                            throw new TypeException(
+                                list2.Types,
+                                list1.Types
+                            );
+                        }
+                        
+                        foreach(var value in (list2 as VmList).Values) {
+                            (list1 as VmList).Values.Add(value);
+                        }
+                        localStack.Push(list1);
+                    }
+                    break;
+                
                 case Instruction.PopItemsOfSameTypePushList: {
                         if(localStack.Count < 1) {
                             throw new StackUnderflowException();
@@ -525,8 +557,9 @@ namespace snakescript {
                         var lsTypes = localStack.Peek().Types;
                         var items = new List<VmValue>();
 
-                        while(VmValue.ShareType(
-                                new VmValue(lsTypes), localStack.Peek())) {
+                        while(localStack.Count > 0
+                                && VmValue.ShareType(
+                                    new VmValue(lsTypes), localStack.Peek())) {
                             items.Add(localStack.Pop());
                         }
                         

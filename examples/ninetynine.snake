@@ -1,25 +1,32 @@
 \brwl : # > [@] {                                                               
                                                                                 
-    ' bottles of beer on the wall.\n'<>$++<<                                    
+    $ ' bottles of beer on the wall.\n'++<<                                     
                                                                                 
 }                                                                               
                                                                                 
 \br : # > [@] {                                                                 
                                                                                 
-    ' bottles of beer.\n'<>$++<<                                                
+    $ ' bottles of beer.\n'++<<                                                 
                                                                                 
 }                                                                               
                                                                                 
-99i= i1?> [?] {                                                                 
+'99 bottles of beer on the wall.\n99 bottles of beer.\nTake one down pass it'   
                                                                                 
-    i(brwl)i(br)++ 'Take one down pass it around.\n'++                          
+' around.\n' ++ .                                                               
                                                                                 
-    i1-i= i(brwl)++                                                             
+98i= i2?> [?] {                                                                 
+                                                                                
+    i1-i= i(brwl) ['\n']++                                                      
+                                                                                
+    i(brwl)++i(br)++ 'Take one down pass it around.\n'++                        
                                                                                 
     .                                                                           
                                                                                 
-    i1?>                                                                        
+    i2?>                                                                        
+                                                                                
 }                                                                               
+                                                                                
+'1 bottle of beer on the wall.\n\n' .                                           
                                                                                 
 '1 bottle of beer on the wall.\n1 bottle of beer.\nTake one down pass it around'
                                                                                 
