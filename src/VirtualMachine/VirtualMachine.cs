@@ -17,9 +17,9 @@ namespace snakescript {
             }
         }
 
-        private void execute(OpCode opCode) {
-            var localStack = CallStack.Peek().LocalStack;
-            var varLookup = CallStack.Peek().CurrentVariables;
+        private void execute(OpCode opCode, ref VmStackFrame stackFrame) {
+            var localStack = stackFrame.LocalStack;
+            var varLookup = stackFrame.CurrentVariables;
 
             switch(opCode.Inst) {
                 case Instruction.Pop: {
@@ -52,14 +52,14 @@ namespace snakescript {
                 case Instruction.Return: {
                         var tos = localStack.Pop();
                         if(!VmValue.ShareType(
-                                tos, new VmValue(CallStack.Peek().ReturnTypes)
-                        )) {
+                                tos, new VmValue(stackFrame.ReturnTypes))) {
                             throw new TypeException(
-                                CallStack.Peek().ReturnTypes, tos.Types
+                                stackFrame.ReturnTypes, tos.Types
                             );
                         }
-                        CallStack.Pop();
-                        CallStack.Peek().LocalStack.Push(tos);
+
+                        stackFrame = CallStack.Pop();
+                        stackFrame.LocalStack.Push(tos);
                     }
                     break;
                 
@@ -120,7 +120,7 @@ namespace snakescript {
                                 }
                                 var valCodes = Compiler.CompileValue(value);
                                 foreach(var inst in valCodes) {
-                                    execute(inst);
+                                    execute(inst, ref stackFrame);
                                 }
                             }
                         }
@@ -203,11 +203,11 @@ namespace snakescript {
                             );
                         }
 
-                        CallStack.Push(
-                            new VmStackFrame(
-                                newLocal, function.OpCodes, function.OutputTypes
-                            )
+                        CallStack.Push(stackFrame);
+                        stackFrame = new VmStackFrame(
+                            newLocal, function.OpCodes, function.OutputTypes
                         );
+                        stackFrame.InstructionCounter = -1;
                     }
                     break;
             }
@@ -221,10 +221,14 @@ namespace snakescript {
             );
 
             while(CallStack.Count > 0) {
-                if(CallStack.Peek().OpCodes.Count > 0) {
-                    execute(CallStack.Peek().OpCodes.Pop());
-                } else {
-                    CallStack.Pop();
+                var stackFrame = CallStack.Pop();
+                if(stackFrame.InstructionCounter < stackFrame.OpCodes.Count) {
+                    execute(
+                        stackFrame.OpCodes[stackFrame.InstructionCounter],
+                        ref stackFrame
+                    );
+                    stackFrame.InstructionCounter++;
+                    CallStack.Push(stackFrame);
                 }
             }
         }

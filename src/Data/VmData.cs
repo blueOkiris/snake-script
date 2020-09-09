@@ -105,8 +105,9 @@ namespace snakescript {
     struct VmStackFrame {
         public Dictionary<string, VmVar> CurrentVariables;
         public Stack<VmValue> LocalStack;
-        public Stack<OpCode> OpCodes;
+        public List<OpCode> OpCodes;
         public VmValueType[] ReturnTypes;
+        public int InstructionCounter;
 
         public VmStackFrame(
                 Stack<VmValue> initialStack, OpCode[] opCodes,
@@ -114,12 +115,13 @@ namespace snakescript {
             LocalStack = initialStack;
             CurrentVariables = new Dictionary<string, VmVar>();
             
-            OpCodes = new Stack<OpCode>();
-            for(int i = opCodes.Length - 1; i >= 0; i--) {
-                OpCodes.Push(opCodes[i]);
+            OpCodes = new List<OpCode>();
+            for(int i = 0; i < opCodes.Length; i++) {
+                OpCodes.Add(opCodes[i]);
             }
 
             ReturnTypes = returnTypes;
+            InstructionCounter = 0;
         }
     }
 
