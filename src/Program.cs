@@ -56,6 +56,11 @@ namespace snakescript {
                     Console.WriteLine("Parser Output:");
                     Console.WriteLine(ast);
                 }
+
+                var insts = Compiler.Translate(ast);
+                var vm = new VirtualMachine(insts.Item1, insts.Item2);
+
+                vm.Run();
             }
         }
     }
