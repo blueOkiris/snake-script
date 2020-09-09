@@ -240,7 +240,7 @@ namespace snakescript {
         //              | <str> | <list> | <tuple>
         // <list> ::= <l-bracket> { <value> } <r-bracket>
         // <tuple> ::= <l-parenth> <value> <value> <r-parenth>
-        private static OpCode[] compileValue(CompoundToken value) {
+        public static OpCode[] CompileValue(CompoundToken value) {
             var opCodes = new List<OpCode>();
             
             OpCode[] tempArr;
@@ -302,7 +302,7 @@ namespace snakescript {
                             int i =
                                 (subChild as CompoundToken).Children.Length - 2;
                             i >= 1; i--) {
-                        tempArr = compileValue(
+                        tempArr = CompileValue(
                             (subChild as CompoundToken).Children[i]
                                 as CompoundToken
                         );
@@ -316,14 +316,14 @@ namespace snakescript {
                     break;
                 
                 case TokenType.Tuple:
-                    tempArr = compileValue(
+                    tempArr = CompileValue(
                         (subChild as CompoundToken).Children[2]
                             as CompoundToken
                     );
                     foreach(var opCode in tempArr) {
                         opCodes.Add(opCode);
                     }
-                    tempArr = compileValue(
+                    tempArr = CompileValue(
                         (subChild as CompoundToken).Children[1]
                             as CompoundToken
                     );

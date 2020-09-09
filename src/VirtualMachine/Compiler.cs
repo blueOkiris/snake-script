@@ -64,7 +64,7 @@ namespace snakescript {
                         break;
 
                     case TokenType.Value:
-                        tempArr = compileValue(child as CompoundToken);
+                        tempArr = CompileValue(child as CompoundToken);
                         foreach(var opCode in tempArr) {
                             opCodes.Add(opCode);
                         }

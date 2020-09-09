@@ -1,4 +1,6 @@
+using System;
 using System.Collections.Generic;
+using System.Text;
 
 namespace snakescript {
     struct VirtualMachine {
@@ -58,6 +60,64 @@ namespace snakescript {
                         }
                         CallStack.Pop();
                         CallStack.Peek().LocalStack.Push(tos);
+                    }
+                    break;
+                
+                case Instruction.Input: {
+                        var input = Console.ReadLine();
+                        var chars = new List<VmValue>();
+                        for(int i = input.Length - 1; i >= 0; i--) {
+                            chars.Add(new VmChar(input[i]));
+                        }
+                        localStack.Push(new VmList(VmValueType.Chr, chars));
+                    }
+                    break;
+                
+                case Instruction.PopStrPushAny: {
+                        if(localStack.Count < 1) {
+                            throw new StackUnderflowException();
+                        }
+                        var tos = localStack.Pop();
+                        if(!VmValue.ShareType(
+                                tos,
+                                new VmValue(
+                                    new VmValueType[] {
+                                        VmValueType.Ls, VmValueType.Chr
+                                    }
+                                )
+                            )
+                        ) {
+                            throw new TypeException(
+                                new VmValueType[] {
+                                    VmValueType.Ls, VmValueType.Chr
+                                }, tos.Types
+                            );
+                        }
+                        var tosStr = new StringBuilder();
+                        for(int i = 0; i < (tos as VmList).Values.Count; i++) {
+                            var val = (tos as VmList).Values[i];
+                            tosStr.Append((val as VmChar).Value);
+                        }
+
+                        var tokens = Lexer.Tokens(tosStr.ToString());
+                        CompoundToken valueAst = Parser.BuildProgram(tokens);
+                        foreach(CompoundToken stmt in valueAst.Children) {
+                            if(stmt.Type != TokenType.Stmt) {
+                                throw new Exception("Expected stmt in input");
+                            }
+
+                            foreach(CompoundToken value in stmt.Children) {
+                                if(value.Type != TokenType.Value) {
+                                    throw new Exception(
+                                        "Expected value in input"
+                                    );
+                                }
+                                var valCodes = Compiler.CompileValue(value);
+                                foreach(var inst in valCodes) {
+                                    execute(inst);
+                                }
+                            }
+                        }
                     }
                     break;
                 
