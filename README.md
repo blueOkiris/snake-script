@@ -6,7 +6,7 @@ A statically-typed stack-based esoteric programming language that is made to be 
 
 ## Build
 
-You can build the interpreter 'snakey' by running:
+You can build the interpreter, 'snakey,' by running:
 
  * `make LINUX=1` for Linux
  
