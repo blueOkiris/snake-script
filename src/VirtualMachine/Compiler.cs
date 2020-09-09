@@ -13,7 +13,7 @@ namespace snakescript {
 
             // <body> ::= <l-brace> { <stmt> } <r-brace>
             var opCodes = new List<OpCode>();
-            for(int i = 1; i < body.Children.Length - 2; i++) {
+            for(int i = 1; i < body.Children.Length - 1; i++) {
                 var stmtCodes = compileStmt(body.Children[i] as CompoundToken);
                 foreach(var opCode in stmtCodes) {
                     opCodes.Add(opCode);
@@ -39,6 +39,16 @@ namespace snakescript {
                         foreach(var opCode in tempArr) {
                             opCodes.Add(opCode);
                         }
+                        break;
+                    
+                    case TokenType.While:
+                        break;
+                    
+                    case TokenType.FuncCall:
+                        break;
+
+                    case TokenType.Return:
+                        opCodes.Add(OpCode.Return);
                         break;
                 }
             }

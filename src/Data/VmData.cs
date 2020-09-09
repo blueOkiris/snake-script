@@ -10,7 +10,11 @@ namespace snakescript {
         Pop2PushEqual, Pop2PushGreaterThan, Pop2PushLessThan, Pop1PushNot,
         Pop2PushAnd, Pop2PushOr,
         Pop2PushConcat, Pop2PushWithRemovedInd, Pop2PushListPushListAtInd,
-        PopListPushUnzipped, PopItemsOfSameTypePushList
+        PopListPushUnzipped, PopItemsOfSameTypePushList,
+
+        Return,
+
+
     }
 
     struct Function {
