@@ -73,6 +73,12 @@ namespace snakescript {
                     }
                     break;
                 
+                case Instruction.Print: {
+                        var tos = localStack.Pop();
+                        Console.Write(tos.ToString());
+                    }
+                    break;
+                
                 case Instruction.PopStrPushAny: {
                         if(localStack.Count < 1) {
                             throw new StackUnderflowException();
@@ -126,6 +132,61 @@ namespace snakescript {
                         var num = new VmNum(double.Parse(valueStr));
 
                         localStack.Push(num);
+                    }
+                    break;
+                
+                case Instruction.PushChar: {
+                        var valueStr = opCode.Argument.Substring(
+                            1, opCode.Argument.Length - 2
+                        );
+                        if(valueStr[0] == '\\') {
+                            switch(valueStr[1]) {
+                                case '\'':
+                                    localStack.Push(new VmChar('\''));
+                                    break;
+                                
+                                case 'n':
+                                    localStack.Push(new VmChar('\n'));
+                                    break;
+                                
+                                case 't':
+                                    localStack.Push(new VmChar('\t'));
+                                    break;
+                                
+                                case 'r':
+                                    localStack.Push(new VmChar('\r'));
+                                    break;
+                                
+                                case '\\':
+                                    localStack.Push(new VmChar('\\'));
+                                    break;
+                            }
+                        } else {
+                            localStack.Push(new VmChar(valueStr[0]));
+                        }
+                    }
+                    break;
+                
+                case Instruction.PushBool: {
+                        var valueStr = opCode.Argument;
+
+                        if(valueStr == "?t") {
+                            var chr = new VmBool(true);
+                            localStack.Push(chr);
+                        } else if(valueStr == "?f") {
+                            var chr = new VmBool(false);
+                            localStack.Push(chr);
+                        }
+                    }
+                    break;
+                
+                case Instruction.PushIdent: {
+                        var varName = opCode.Argument;
+                        if(!varLookup.ContainsKey(varName)) {
+                            varLookup.Add(varName, new VmVar(varName));
+                        } else {
+                            localStack.Push(varLookup[varName].Value);
+                        }
                     }
                     break;
                 

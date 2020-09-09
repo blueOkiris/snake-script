@@ -148,6 +148,10 @@ namespace snakescript {
 
             return true;
         }
+
+        public override string ToString() {
+            return "generic value";
+        }
     }
 
     class VmChar : VmValue {
@@ -156,6 +160,10 @@ namespace snakescript {
         public VmChar(char value)
                 : base(new VmValueType[] { VmValueType.Chr }) {
             Value = value;
+        }
+
+        public override string ToString() {
+            return "" + Value;
         }
     }
 
@@ -166,6 +174,10 @@ namespace snakescript {
                 : base(new VmValueType[] { VmValueType.Num }) {
             Value = value;
         }
+
+        public override string ToString() {
+            return "" + Value;
+        }
     }
 
     class VmBool : VmValue {
@@ -174,6 +186,10 @@ namespace snakescript {
         public VmBool(bool value)
                 : base(new VmValueType[] { VmValueType.Bool }) {
             Value = value;
+        }
+
+        public override string ToString() {
+            return Value ? "true" : "false";
         }
     }
 
@@ -191,6 +207,10 @@ namespace snakescript {
             Name = name;
             Value = new VmUnDef();
         }
+
+        public override string ToString() {
+            return "undefined";
+        }
     }
 
     class VmList : VmValue {
@@ -199,6 +219,28 @@ namespace snakescript {
         public VmList(VmValueType subType, List<VmValue> values)
                 : base(new VmValueType[] { VmValueType.Ls, subType }) {
             Values = values;
+        }
+
+        public override string ToString() {
+            if(Types[1] == VmValueType.Chr) {
+                var strStr = new StringBuilder();
+                foreach(VmChar chr in Values) {
+                    strStr.Append(chr);
+                }
+                return strStr.ToString();
+            } else {
+                var listStr = new StringBuilder();
+                listStr.Append('{');
+                foreach(var value in Values) {
+                    listStr.Append(' ');
+                    listStr.Append(value.ToString());
+                    if(value != Values[Values.Count - 1]) {
+                        listStr.Append(',');
+                    }
+                }
+                listStr.Append(" }");
+                return listStr.ToString();
+            }
         }
     }
 
@@ -213,6 +255,16 @@ namespace snakescript {
                 ) {
             Item1 = item1;
             Item2 = item2;
+        }
+
+        public override string ToString() {
+            var tupStr = new StringBuilder();
+            tupStr.Append("( ");
+            tupStr.Append(Item1.ToString());
+            tupStr.Append(", ");
+            tupStr.Append(Item2.ToString());
+            tupStr.Append(" )");
+            return tupStr.ToString();
         }
     }
 }
