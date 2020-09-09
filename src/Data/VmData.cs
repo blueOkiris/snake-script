@@ -151,6 +151,48 @@ namespace snakescript {
             return true;
         }
 
+        public static bool Equal(VmValue val1, VmValue val2) {
+            if(val1.Types[0] == VmValueType.Ls) {
+                if((val1 as VmList).Values.Count
+                        != (val2 as VmList).Values.Count) {
+                    return false;
+                } else {
+                    for(int i = 0; i < (val1 as VmList).Values.Count; i++) {
+                        var equal = VmValue.Equal(
+                            (val1 as VmList).Values[i],
+                            (val2 as VmList).Values[i]
+                        );
+
+                        if(!equal) {
+                            return false;
+                        }
+                    }
+
+                    return true;
+                }
+            } else if(val1.Types[0] == VmValueType.Tup) {
+                var equal1 = VmValue.Equal(
+                    (val1 as VmTuple).Item1, (val2 as VmTuple).Item1
+                );
+                var equal2 = VmValue.Equal(
+                    (val1 as VmTuple).Item2, (val2 as VmTuple).Item2
+                );
+
+                return equal1 && equal2;
+            } else {
+                switch(val1.Types[0]) {
+                    case VmValueType.Num:
+                        return (val1 as VmNum).Value == (val2 as VmNum).Value;
+                    case VmValueType.Chr:
+                        return (val1 as VmChar).Value == (val2 as VmChar).Value;
+                    case VmValueType.Bool:
+                        return (val1 as VmBool).Value == (val2 as VmBool).Value;
+                }
+            }
+
+            return false;
+        }
+
         public override string ToString() {
             return "generic value";
         }

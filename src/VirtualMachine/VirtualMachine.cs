@@ -190,6 +190,20 @@ namespace snakescript {
                         );
                     }
                     break;
+
+                case Instruction.Pop2PushEqual: {
+                        if(localStack.Count < 2) {
+                            throw new StackUnderflowException();
+                        }
+                        var tos = localStack.Pop();
+                        var sos = localStack.Pop();
+                        if(!VmValue.ShareType(tos, sos)) {
+                            throw new TypeException(tos.Types, sos.Types);
+                        }
+
+                        localStack.Push(new VmBool(VmValue.Equal(tos, sos)));
+                    }
+                    break;
                 
                 case Instruction.PopAnyPushStr: {
                         if(localStack.Count < 1) {
@@ -448,6 +462,7 @@ namespace snakescript {
                                 ].Argument != startLabelName) {
                             stackFrame.InstructionCounter--;
                         }
+                        stackFrame.InstructionCounter--;
                     }
                     break;
             }
