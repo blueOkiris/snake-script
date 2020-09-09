@@ -90,6 +90,10 @@ namespace snakescript {
             var opCodes = new List<OpCode>();
 
             switch(op.Children[0].Type) {
+                case TokenType.AsgnOp:
+                    opCodes.Add(new OpCode(Instruction.SetVar));
+                    break;
+                
                 case TokenType.IoOp:
                     switch((op.Children[0] as SymbolToken).Source) {
                         case ".":

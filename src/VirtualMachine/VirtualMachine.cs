@@ -48,6 +48,45 @@ namespace snakescript {
                         localStack.Push(sos);
                     }
                     break;
+
+                case Instruction.SetVar: {
+                        if(localStack.Count < 2) {
+                            throw new StackUnderflowException();
+                        }
+                        var tos = localStack.Pop();
+                        var sos = localStack.Pop();
+                        if(!(tos is VmVar)) {
+                            throw new TypeException(
+                                new VmValueType[] { VmValueType.Var },
+                                tos.Types
+                            );
+                        }
+
+                        if(varLookup.ContainsKey((tos as VmVar).Name)) {
+                            if(varLookup[(tos as VmVar).Name].Types[0] 
+                                    != VmValueType.UndDef) {
+                                if(!VmValue.ShareType(
+                                        (tos as VmVar).Value, sos)) {
+                                    throw new TypeException(
+                                        (tos as VmVar).Value.Types,
+                                        tos.Types
+                                    );
+                                }
+
+                                varLookup[(tos as VmVar).Name].Value = sos;
+                            } else {
+                                var types = new List<VmValueType>();
+                                types.Add(VmValueType.Var);
+                                foreach(var type in sos.Types) {
+                                    types.Add(type);
+                                }
+                                varLookup[(tos as VmVar).Name].Value = sos;
+                                varLookup[(tos as VmVar).Name].Types = 
+                                    types.ToArray();
+                            }
+                        }
+                    }
+                    break;
                 
                 case Instruction.Input: {
                         var input = Console.ReadLine();
@@ -491,9 +530,9 @@ namespace snakescript {
                         var varName = opCode.Argument;
                         if(!varLookup.ContainsKey(varName)) {
                             varLookup.Add(varName, new VmVar(varName));
-                        } else {
-                            localStack.Push(varLookup[varName].Value);
                         }
+                        
+                        localStack.Push(varLookup[varName]);
                     }
                     break;
                 
@@ -507,9 +546,9 @@ namespace snakescript {
 
                         var function = Functions[opCode.Argument];
                         if(!VmValue.ShareType(
-                                tos, new VmValue(function.OutputTypes))) {
+                                tos, new VmValue(function.InputTypes))) {
                             throw new TypeException(
-                                function.OutputTypes, tos.Types
+                                function.InputTypes, tos.Types
                             );
                         }
 

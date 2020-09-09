@@ -12,6 +12,7 @@ namespace snakescript {
         Pop2PushAnd, Pop2PushOr,
         Pop2PushConcat, Pop2PushWithRemovedInd, Pop2PushListPushListAtInd,
         PopListPushUnzipped, PopItemsOfSameTypePushList,
+        SetVar,
         Print, Input,
         Round,
 
@@ -139,12 +140,20 @@ namespace snakescript {
         }
 
         public static bool ShareType(VmValue val1, VmValue val2) {
-            if(val1.Types.Length != val2.Types.Length) {
+            var compTypes1 = val1.Types;
+            var compTypes2 = val2.Types;
+            if(compTypes1[0] == VmValueType.Var) {
+                compTypes1 = (val1 as VmVar).Value.Types;
+            }
+            if(compTypes2[0] == VmValueType.Var) {
+                compTypes2 = (val2 as VmVar).Value.Types;
+            }
+            if(compTypes1.Length != compTypes2.Length) {
                 return false;
             }
 
-            for(int i = 0; i < val1.Types.Length; i++) {
-                if(val1.Types[i] != val2.Types[i]) {
+            for(int i = 0; i < compTypes1.Length; i++) {
+                if(compTypes1[i] != compTypes2[i]) {
                     return false;
                 }
             }
@@ -176,6 +185,13 @@ namespace snakescript {
                 );
 
                 return comp1 + comp2;
+            } else if(other.Types[0] == VmValueType.Var
+                    && Types[0] == VmValueType.Var) {
+                return (this as VmVar).Value.CompareTo((other as VmVar).Value);
+            } else if(Types[0] == VmValueType.Var) {
+                return (this as VmVar).Value.CompareTo(other);
+            } else if(other.Types[0] == VmValueType.Var) {
+                return CompareTo((other as VmVar).Value);
             } else {
                 switch(Types[0]) {
                     case VmValueType.Num:
@@ -243,6 +259,10 @@ namespace snakescript {
     class VmUnDef : VmValue {
         public VmUnDef()
             : base(new VmValueType[] { VmValueType.UndDef }) {}
+
+        public override string ToString() {
+            return "undefined";
+        }
     }
 
     class VmVar : VmValue {
@@ -250,13 +270,17 @@ namespace snakescript {
         public VmValue Value;
 
         public VmVar(string name)
-                : base(new VmValueType[] { VmValueType.Var }) {
+                : base(new VmValueType[] { VmValueType.UndDef }) {
             Name = name;
             Value = new VmUnDef();
         }
 
         public override string ToString() {
-            return "undefined";
+            if(Types[0] == VmValueType.UndDef) {
+                return "var";
+            } else {
+                return Value.ToString();
+            }
         }
     }
 

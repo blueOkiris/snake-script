@@ -7,7 +7,8 @@ namespace snakescript {
         private static bool isOperator(TokenType type) {
             return type == TokenType.StackOp || type == TokenType.MathOp
                 || type == TokenType.ListTupleOp || type == TokenType.BoolOp
-                || type == TokenType.RoundOp || type == TokenType.IoOp;
+                || type == TokenType.RoundOp || type == TokenType.IoOp
+                || type == TokenType.AsgnOp;
         }
 
         // <stmt> ::= <op> | <while> | <func-call> | <return> | <value>
@@ -352,6 +353,9 @@ namespace snakescript {
             }, { 
                 new Regex(@"\?[><=!&\|]", RegexOptions.Compiled),
                 TokenType.BoolOp
+            }, { 
+                new Regex(@"=", RegexOptions.Compiled),
+                TokenType.AsgnOp
             }, { 
                 new Regex(@"\(\)", RegexOptions.Compiled),
                 TokenType.MakeTuple

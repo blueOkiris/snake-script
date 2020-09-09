@@ -1,4 +1,27 @@
-\brwl:#>[@]{$' bottles of bear on the wall.\n'++<<}\br:#>[@]{$' of beer.\n'++<<}
-'1'}.++)lwrb(=i-1i++'n\.dnuora ti ssap nwod eno ekaT'++)rb(i)lwrb(i{]?[>?1ii=i99
-' bottle of beer on the wall.\n1 bottle of beer.\nTake one down pass it around.'
-                                 .++'n\.llaw eht no reeb fo selttob erom oNn\'++
+\brwl : # > [@] {
+
+    $' bottles of beer on the wall.\n'<>++<<
+    
+}
+
+\br : # > [@] {
+    
+    $' bottles of beer.\n'<>++<<
+
+}
+
+99i= i1?> [?] {
+    
+    i(brwl)i(br)++ 'Take one down pass it around.\n'++
+
+    i1-i= i(brwl)++
+
+    .
+    
+}
+
+'1 bottle of beer on the wall.\n1 bottle of beer.\nTake one down pass it around'
+
+'.\nNo more bottles of beer on the wall.\n'++
+
+.

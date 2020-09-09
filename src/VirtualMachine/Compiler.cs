@@ -21,7 +21,7 @@ namespace snakescript {
             }
 
             var type = toVmValueType(typeTok);
-            var retType = toVmValueType(typeTok);
+            var retType = toVmValueType(retTypeTok);
             
             return new Function(ident.Source, type, retType, opCodes.ToArray());
         }

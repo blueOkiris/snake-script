@@ -11,6 +11,7 @@
 <io-op>         ::= /[\.,]/
 <math-op>       ::= /[+-*\/\^]/
 <bool-op>       ::= /\?[><=!&\|]/
+<asgn-op>       ::= /=/
 <mk-tup>        ::= /\(\)/
 <to-str>        ::= /\$/
 <to-chr>        ::= /`/
@@ -31,7 +32,7 @@
 <list>          ::= <l-bracket> { <value> } <r-bracket>
 <tuple>         ::= <l-parenth> <value> <value> <r-parenth>
 <value>         ::= <ident> | <char> | <num> | <bool> | <str> | <list> | <tuple>
-<op>            ::= <stack-op> | <math-op> | <bool-op> | <ls-tp-op>
+<op>            ::= <stack-op> | <math-op> | <bool-op> | <ls-tp-op> | <asgn-op>
 <func-call>     ::= <l-parenth> <ident> <r-parenth>
 <stmt>          ::= <op> | <while> | <func-call> | <return> | <value> | <to-str>
                     | <to-chr> | <mk-tup> | <parse-str> | <to-bool>
