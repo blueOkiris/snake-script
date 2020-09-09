@@ -242,6 +242,21 @@ namespace snakescript {
         // <tuple> ::= <l-parenth> <value> <value> <r-parenth>
         private static OpCode[] compileValue(CompoundToken value) {
             var opCodes = new List<OpCode>();
+            
+            switch(value.Children[0].Type) {
+                case TokenType.Num:
+                case TokenType.Char:
+                case TokenType.Bool:
+                case TokenType.Ident:
+                    opCodes.Add(
+                        new OpCode(
+                            Instruction.PushNum,
+                            (value.Children[0] as SymbolToken).Source
+                        )
+                    );
+                    break;
+            }
+
             return opCodes.ToArray();
         }
     }
