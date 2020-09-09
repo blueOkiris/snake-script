@@ -204,6 +204,99 @@ namespace snakescript {
                         localStack.Push(new VmBool(sos.CompareTo(tos) == 0));
                     }
                     break;
+
+                case Instruction.Pop2PushGreaterThan: {
+                        if(localStack.Count < 2) {
+                            throw new StackUnderflowException();
+                        }
+                        var tos = localStack.Pop();
+                        var sos = localStack.Pop();
+                        if(!VmValue.ShareType(tos, sos)) {
+                            throw new TypeException(tos.Types, sos.Types);
+                        }
+
+                        localStack.Push(new VmBool(sos.CompareTo(tos) > 0));
+                    }
+                    break;
+
+                case Instruction.Pop2PushLessThan: {
+                        if(localStack.Count < 2) {
+                            throw new StackUnderflowException();
+                        }
+                        var tos = localStack.Pop();
+                        var sos = localStack.Pop();
+                        if(!VmValue.ShareType(tos, sos)) {
+                            throw new TypeException(tos.Types, sos.Types);
+                        }
+
+                        localStack.Push(new VmBool(sos.CompareTo(tos) < 0));
+                    }
+                    break;
+
+                case Instruction.Pop2PushAnd: {
+                        if(localStack.Count < 2) {
+                            throw new StackUnderflowException();
+                        }
+                        var tos = localStack.Pop();
+                        var sos = localStack.Pop();
+                        if(!VmValue.ShareType(tos, new VmBool(true))) {
+                            throw new TypeException(
+                                tos.Types, (new VmBool(true)).Types
+                            );
+                        }
+                        if(!VmValue.ShareType(sos, new VmBool(true))) {
+                            throw new TypeException(
+                                sos.Types, (new VmBool(true)).Types
+                            );
+                        }
+
+                        localStack.Push(
+                            new VmBool(
+                                (sos as VmBool).Value && (tos as VmBool).Value
+                            )
+                        );
+                    }
+                    break;
+
+                case Instruction.Pop2PushOr: {
+                        if(localStack.Count < 2) {
+                            throw new StackUnderflowException();
+                        }
+                        var tos = localStack.Pop();
+                        var sos = localStack.Pop();
+                        if(!VmValue.ShareType(tos, new VmBool(true))) {
+                            throw new TypeException(
+                                tos.Types, (new VmBool(true)).Types
+                            );
+                        }
+                        if(!VmValue.ShareType(sos, new VmBool(true))) {
+                            throw new TypeException(
+                                sos.Types, (new VmBool(true)).Types
+                            );
+                        }
+
+                        localStack.Push(
+                            new VmBool(
+                                (sos as VmBool).Value || (tos as VmBool).Value
+                            )
+                        );
+                    }
+                    break;
+
+                case Instruction.Pop1PushNot: {
+                        if(localStack.Count < 2) {
+                            throw new StackUnderflowException();
+                        }
+                        var tos = localStack.Pop();
+                        if(!VmValue.ShareType(tos, new VmBool(true))) {
+                            throw new TypeException(
+                                tos.Types, (new VmBool(true)).Types
+                            );
+                        }
+
+                        localStack.Push(new VmBool((tos as VmBool).Value));
+                    }
+                    break;
                 
                 case Instruction.PopAnyPushStr: {
                         if(localStack.Count < 1) {
