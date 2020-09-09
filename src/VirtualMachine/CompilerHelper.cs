@@ -243,6 +243,7 @@ namespace snakescript {
         private static OpCode[] compileValue(CompoundToken value) {
             var opCodes = new List<OpCode>();
             
+            OpCode[] tempArr;
             Token subChild = value.Children[0];
             switch(subChild.Type) {
                 case TokenType.Num:
@@ -294,6 +295,42 @@ namespace snakescript {
                     opCodes.Add(
                         new OpCode(Instruction.PopItemsOfSameTypePushList)
                     );
+                    break;
+                
+                case TokenType.List:
+                    for(
+                            int i =
+                                (subChild as CompoundToken).Children.Length - 2;
+                            i >= 1; i--) {
+                        tempArr = compileValue(
+                            (subChild as CompoundToken).Children[i]
+                                as CompoundToken
+                        );
+                        foreach(var opCode in tempArr) {
+                            opCodes.Add(opCode);
+                        }
+                    }
+                    opCodes.Add(
+                        new OpCode(Instruction.PopItemsOfSameTypePushList)
+                    );
+                    break;
+                
+                case TokenType.Tuple:
+                    tempArr = compileValue(
+                        (subChild as CompoundToken).Children[2]
+                            as CompoundToken
+                    );
+                    foreach(var opCode in tempArr) {
+                        opCodes.Add(opCode);
+                    }
+                    tempArr = compileValue(
+                        (subChild as CompoundToken).Children[1]
+                            as CompoundToken
+                    );
+                    foreach(var opCode in tempArr) {
+                        opCodes.Add(opCode);
+                    }
+                    opCodes.Add(new OpCode(Instruction.Pop2PushTuple));
                     break;
             }
 
