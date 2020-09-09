@@ -42,36 +42,40 @@ namespace snakescript {
                         break;
                     
                     case TokenType.While:
+                        tempArr = compileWhile(child as CompoundToken);
+                        foreach(var opCode in tempArr) {
+                            opCodes.Add(opCode);
+                        }
                         break;
                     
                     case TokenType.FuncCall:
                         break;
 
                     case TokenType.Return:
-                        opCodes.Add(OpCode.Return);
+                        opCodes.Add(new OpCode(Instruction.Return));
                         break;
 
                     case TokenType.Value:
                         break;
                     
                     case TokenType.ToStr:
-                        opCodes.Add(OpCode.PopAnyPushStr);
+                        opCodes.Add(new OpCode(Instruction.PopAnyPushStr));
                         break;
                     
                     case TokenType.ToChr:
-                        opCodes.Add(OpCode.PopNumPushChr);
+                        opCodes.Add(new OpCode(Instruction.PopNumPushChr));
                         break;
 
                     case TokenType.ToBool:
-                        opCodes.Add(OpCode.PopNumChrPushBool);
+                        opCodes.Add(new OpCode(Instruction.PopNumChrPushBool));
                         break;
                     
                     case TokenType.MakeTuple:
-                        opCodes.Add(OpCode.Pop2PushTuple);
+                        opCodes.Add(new OpCode(Instruction.Pop2PushTuple));
                         break;
                     
                     case TokenType.ParseStr:
-                        opCodes.Add(OpCode.PopStrPushAny);
+                        opCodes.Add(new OpCode(Instruction.PopStrPushAny));
                         break;
                 }
             }

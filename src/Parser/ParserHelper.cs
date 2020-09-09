@@ -167,6 +167,7 @@ namespace snakescript {
         // <while> ::= <while-op> <body>
         private static CompoundToken parseWhile(
                 ref int i, SymbolToken[] tokens) {
+            var whileOp = tokens[i];
             i++;
             if(i >= tokens.Length) {
                 throw new UnexpectedEOFExecteption(
@@ -175,7 +176,9 @@ namespace snakescript {
             }
             var child = parseBody(ref i, tokens);
 
-            return new CompoundToken(TokenType.While, new Token[] { child });
+            return new CompoundToken(
+                TokenType.While, new Token[] { whileOp, child }
+            );
         }
         
         // <func-call> ::= <l-parenth> <ident> <r-parenth>

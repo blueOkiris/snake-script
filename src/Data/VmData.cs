@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using System.Text;
 
 namespace snakescript {
-    enum OpCode {
+    enum Instruction {
         // Ops
         Pop, Duplicate, Swap,
         Pop2PushSum, Pop2PushDifference, Pop2PushProduct, Pop2PushQuotient,
@@ -18,7 +18,36 @@ namespace snakescript {
 
         // Conversions
         PopAnyPushStr, PopNumPushChr, PopNumChrPushBool, Pop2PushTuple,
-        PopStrPushAny
+        PopStrPushAny,
+
+        // Flow control
+        Label, Goto
+    }
+
+    struct OpCode {
+        public Instruction Inst;
+        public string Argument;
+
+        public OpCode(Instruction inst, string arg = "") {
+            Inst = inst;
+            Argument = arg;
+        }
+
+        public override string ToString() {
+            var opCodeStr = new StringBuilder();
+
+            if(Argument != "") {
+                opCodeStr.Append("( ");
+                opCodeStr.Append(Inst);
+                opCodeStr.Append(", '");
+                opCodeStr.Append(Argument);
+                opCodeStr.Append("' )");
+            } else {
+                opCodeStr.Append(Inst);
+            }
+
+            return opCodeStr.ToString();
+        }
     }
 
     struct Function {

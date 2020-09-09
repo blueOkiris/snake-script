@@ -2,6 +2,8 @@ using System.Collections.Generic;
 
 namespace snakescript {
     partial class Compiler {
+        public static int LabelInd = 0;
+
         private static VmValueType[] valueTypeFromStr(SymbolToken typeTok) {
             switch(typeTok.Source) {
                 case "#":
@@ -91,31 +93,31 @@ namespace snakescript {
                 case TokenType.IoOp:
                     switch((op.Children[0] as SymbolToken).Source) {
                         case ".":
-                            opCodes.Add(OpCode.Print);
+                            opCodes.Add(new OpCode(Instruction.Print));
                             break;
                         
                         case ",":
-                            opCodes.Add(OpCode.Input);
+                            opCodes.Add(new OpCode(Instruction.Input));
                             break;
                     }
                     break;
 
                 case TokenType.RoundOp:
-                    opCodes.Add(OpCode.Round);
+                    opCodes.Add(new OpCode(Instruction.Round));
                     break;
                 
                 case TokenType.StackOp:
                     switch((op.Children[0] as SymbolToken).Source) {
                         case ">>":
-                            opCodes.Add(OpCode.Pop);
+                            opCodes.Add(new OpCode(Instruction.Pop));
                             break;
                         
                         case "><":
-                            opCodes.Add(OpCode.Duplicate);
+                            opCodes.Add(new OpCode(Instruction.Duplicate));
                             break;
                         
                         case "<>":
-                            opCodes.Add(OpCode.Swap);
+                            opCodes.Add(new OpCode(Instruction.Swap));
                             break;
                     }
                     break;
@@ -123,19 +125,23 @@ namespace snakescript {
                 case TokenType.MathOp:
                     switch((op.Children[0] as SymbolToken).Source) {
                         case "+":
-                            opCodes.Add(OpCode.Pop2PushSum);
+                            opCodes.Add(new OpCode(Instruction.Pop2PushSum));
                             break;
                         
                         case "-":
-                            opCodes.Add(OpCode.Pop2PushDifference);
+                            opCodes.Add(
+                                new OpCode(Instruction.Pop2PushDifference)
+                            );
                             break;
                         
                         case "*":
-                            opCodes.Add(OpCode.Pop2PushProduct);
+                            opCodes.Add(
+                                new OpCode(Instruction.Pop2PushProduct)
+                            );
                             break;
                         
                         case "^":
-                            opCodes.Add(OpCode.Pop2PushPower);
+                            opCodes.Add(new OpCode(Instruction.Pop2PushPower));
                             break;
                     }
                     break;
@@ -143,27 +149,31 @@ namespace snakescript {
                 case TokenType.BoolOp:
                     switch((op.Children[0] as SymbolToken).Source) {
                         case "?=":
-                            opCodes.Add(OpCode.Pop2PushEqual);
+                            opCodes.Add(new OpCode(Instruction.Pop2PushEqual));
                             break;
                         
                         case "?>":
-                            opCodes.Add(OpCode.Pop2PushGreaterThan);
+                            opCodes.Add(
+                                new OpCode(Instruction.Pop2PushGreaterThan)
+                            );
                             break;
                         
                         case "?<":
-                            opCodes.Add(OpCode.Pop2PushLessThan);
+                            opCodes.Add(
+                                new OpCode(Instruction.Pop2PushLessThan)
+                            );
                             break;
                         
                         case "?!":
-                            opCodes.Add(OpCode.Pop1PushNot);
+                            opCodes.Add(new OpCode(Instruction.Pop1PushNot));
                             break;
                         
                         case "?&":
-                            opCodes.Add(OpCode.Pop2PushAnd);
+                            opCodes.Add(new OpCode(Instruction.Pop2PushAnd));
                             break;
                         
                         case "?|":
-                            opCodes.Add(OpCode.Pop2PushOr);
+                            opCodes.Add(new OpCode(Instruction.Pop2PushOr));
                             break;
                     }
                     break;
@@ -171,34 +181,58 @@ namespace snakescript {
                 case TokenType.ListTupleOp:
                     switch((op.Children[0] as SymbolToken).Source) {
                         case "++":
-                            opCodes.Add(OpCode.Pop2PushConcat);
+                            opCodes.Add(new OpCode(Instruction.Pop2PushConcat));
                             break;
                         
                         case "--":
                             opCodes.Add(
-                                OpCode.Pop2PushWithRemovedInd
+                                new OpCode(Instruction.Pop2PushWithRemovedInd)
                             );
                             break;
                         
                         case "@@":
                             opCodes.Add(
-                                OpCode.Pop2PushListPushListAtInd
+                                new OpCode(
+                                    Instruction.Pop2PushListPushListAtInd
+                                )
                             );
                             break;
                         
                         case "[]":
                             opCodes.Add(
-                                OpCode.PopItemsOfSameTypePushList
+                                new OpCode(
+                                    Instruction.PopItemsOfSameTypePushList
+                                )
                             );
                             break;
                         
                         case "][":
-                            opCodes.Add(OpCode.PopListPushUnzipped);
+                            opCodes.Add(
+                                new OpCode(Instruction.PopListPushUnzipped)
+                            );
                             break;
                     }
                     break;
             }
             
+            return opCodes.ToArray();
+        }
+
+        // <while> ::= <while-op> <body>
+        private static OpCode[] compileWhile(CompoundToken wh) {
+            var opCodes = new List<OpCode>();
+
+            opCodes.Add(new OpCode(Instruction.Label, "Lbl_" + LabelInd));
+            var body = wh.Children[1] as CompoundToken;
+            for(int i = 1; i < body.Children.Length - 1; i++) {
+                var stmtCodes = compileStmt(body.Children[i] as CompoundToken);
+                foreach(var opCode in stmtCodes) {
+                    opCodes.Add(opCode);
+                }
+            }
+            opCodes.Add(new OpCode(Instruction.Goto, "Lbl_" + LabelInd));
+            LabelInd++;
+
             return opCodes.ToArray();
         }
     }
