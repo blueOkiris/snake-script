@@ -2,6 +2,17 @@
 
 A statically-typed stack-based esoteric programming language that is made to be used in 80x25 consoles but is also (hopefully) useful
 
+Here's an example 99-bottles of beer on the wall program to illustrate how it works. Note you read left-to-right, right-to-left, and so on:
+
+```
+\brwl:#>[@]{$' bottles of beer on the wall.\n'++<<}\br:#>[@]{$                  
+'.reeb fo selttob 99n\.llaw eht no reeb fo selttob 99'}<<++'n\.reeb fo selttob '
+'\nTake one down pass it around.\n'++. 98i=i2?>[?]{i1-i=i(brwl)['\n']++i(brwl)++
+'.llaw eht no reeb fo elttob 1'}>?2i.++'n\.dnuora ti ssap nwod eno ekaT' ++)rb(i
+'\n\n'++'1 bottle of beer on the wall.\n1 bottle of beer.\n'++                  
+      .++'n\.llaw eht no reeb fo selttob erom oNn\.dnuora ti ssap nwod eno ekaT'
+```
+
 ## How to use
 
 ## Build

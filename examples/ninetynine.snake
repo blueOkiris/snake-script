@@ -1,35 +1,6 @@
-\brwl : # > [@] {                                                               
-                                                                                
-    $ ' bottles of beer on the wall.\n'++<<                                     
-                                                                                
-}                                                                               
-                                                                                
-\br : # > [@] {                                                                 
-                                                                                
-    $ ' bottles of beer.\n'++<<                                                 
-                                                                                
-}                                                                               
-                                                                                
-'99 bottles of beer on the wall.\n99 bottles of beer.\nTake one down pass it'   
-                                                                                
-' around.\n' ++ .                                                               
-                                                                                
-98i= i2?> [?] {                                                                 
-                                                                                
-    i1-i= i(brwl) ['\n']++                                                      
-                                                                                
-    i(brwl)++i(br)++ 'Take one down pass it around.\n'++                        
-                                                                                
-    .                                                                           
-                                                                                
-    i2?>                                                                        
-                                                                                
-}                                                                               
-                                                                                
-'1 bottle of beer on the wall.\n\n' .                                           
-                                                                                
-'1 bottle of beer on the wall.\n1 bottle of beer.\nTake one down pass it around'
-                                                                                
-'.\nNo more bottles of beer on the wall.\n'++                                   
-                                                                                
-.                                                                               
+\brwl:#>[@]{$' bottles of beer on the wall.\n'++<<}\br:#>[@]{$                  
+'.reeb fo selttob 99n\.llaw eht no reeb fo selttob 99'}<<++'n\.reeb fo selttob '
+'\nTake one down pass it around.\n'++. 98i=i2?>[?]{i1-i=i(brwl)['\n']++i(brwl)++
+'.llaw eht no reeb fo elttob 1'}>?2i.++'n\.dnuora ti ssap nwod eno ekaT' ++)rb(i
+'\n\n'++'1 bottle of beer on the wall.\n1 bottle of beer.\n'++                  
+      .++'n\.llaw eht no reeb fo selttob erom oNn\.dnuora ti ssap nwod eno ekaT'
