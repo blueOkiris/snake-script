@@ -112,7 +112,7 @@ Finally, everything else is a statement. Typically these pop one or two values o
 | `?=` | Pop val 2, pop val 1, push val 1 == val 2 |
 | `?!` | Pop bool, push not bool |
 | `?&` | Pop bool 2, pop bool 1, push bool 1 && bool 2 |
-| `?|` | Pop bool 2, pop bool 1, push bool 1 || bool 2 |
+| `?\|` | Pop bool 2, pop bool 1, push bool 1 || bool 2 |
 | `=` | Pop identifier, pop value, set identifier == value (throws error if not the same type) |
 | `()` | Pop val 2, pop val 1, push `( val1 val2 )` |
 | `$` | Pop value, push that value converted to string |
