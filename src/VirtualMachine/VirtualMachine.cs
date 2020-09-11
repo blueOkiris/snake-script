@@ -543,11 +543,41 @@ namespace snakescript {
                                 new VmValueType[] { VmValueType.Ls }, tos.Types
                             );
                         }
-                        (tos as VmList).Values.Reverse();
-                        
+                        var tosCopy = new List<VmValue>();
                         foreach(var value in (tos as VmList).Values) {
+                            tosCopy.Add(value);
+                        }
+                        tosCopy.Reverse();
+                        
+                        foreach(var value in tosCopy) {
                             localStack.Push(value);
                         }
+                    }
+                    break;
+                    
+                case Instruction.Pop2PushListPushListAtInd: {
+                        if(localStack.Count < 2) {
+                            throw new StackUnderflowException();
+                        }
+                        var tos = localStack.Pop();
+                        var sos = localStack.Pop();
+                        if(!(sos is VmList)) {
+                            throw new TypeException(
+                                new VmValueType[] { VmValueType.Ls }, tos.Types
+                            );
+                        }
+                        if(!(tos is VmNum)) {
+                            throw new TypeException(
+                                new VmValueType[] { VmValueType.Num }, tos.Types
+                            );
+                        }
+                        
+                        localStack.Push(sos);
+                        localStack.Push(
+                            (sos as VmList).Values[
+                                (int) Math.Round((tos as VmNum).Value)
+                            ]
+                        );
                     }
                     break;
             

@@ -316,9 +316,6 @@ namespace snakescript {
                 new Regex(@"'(\\.|[^'])*'", RegexOptions.Compiled),
                 TokenType.Str
             }, { 
-                new Regex(@"([#@])|(\?\?)", RegexOptions.Compiled),
-                TokenType.RawTypeName
-            }, { 
                 new Regex(@"[A-Za-z_]+", RegexOptions.Compiled),
                 TokenType.Ident
             }, { 
@@ -347,6 +344,9 @@ namespace snakescript {
             }, { 
                 new Regex(@"(\+\+|--|@@|\]\[|\[\])", RegexOptions.Compiled),
                 TokenType.ListTupleOp
+            }, { 
+                new Regex(@"([#@])|(\?\?)", RegexOptions.Compiled),
+                TokenType.RawTypeName
             }, { 
                 new Regex(@"[\+\-\*\/\^]", RegexOptions.Compiled),
                 TokenType.MathOp
