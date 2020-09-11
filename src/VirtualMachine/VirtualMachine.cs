@@ -580,6 +580,38 @@ namespace snakescript {
                         );
                     }
                     break;
+                    
+                case Instruction.Pop2PushWithRemovedInd: {
+                        if(localStack.Count < 2) {
+                            throw new StackUnderflowException();
+                        }
+                        var tos = localStack.Pop();
+                        var sos = localStack.Pop();
+                        if(!(sos is VmList)) {
+                            throw new TypeException(
+                                new VmValueType[] { VmValueType.Ls }, tos.Types
+                            );
+                        }
+                        if(!(tos is VmNum)) {
+                            throw new TypeException(
+                                new VmValueType[] { VmValueType.Num }, tos.Types
+                            );
+                        }
+                        
+                        var remInd = (int) Math.Round((tos as VmNum).Value);
+                        
+                        var sosCopy = new List<VmValue>();
+                        foreach(var value in (sos as VmList).Values) {
+                            if(value != (sos as VmList).Values[remInd]) {
+                                sosCopy.Add(value);
+                            }
+                        }
+                        
+                        localStack.Push(
+                            new VmList((sos as VmList).Values[0].Types, sosCopy)
+                        );
+                    }
+                    break;
             
                 case Instruction.Pop2PushTuple: {
                         if(localStack.Count < 2) {
