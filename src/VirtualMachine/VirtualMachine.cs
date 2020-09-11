@@ -475,7 +475,7 @@ namespace snakescript {
                     break;
 
                 case Instruction.Pop1PushNot: {
-                        if(localStack.Count < 2) {
+                        if(localStack.Count < 1) {
                             throw new StackUnderflowException();
                         }
                         var tos = localStack.Pop();
@@ -486,40 +486,6 @@ namespace snakescript {
                         }
 
                         localStack.Push(new VmBool((tos as VmBool).Value));
-                    }
-                    break;
-                
-                case Instruction.PopAnyPushStr: {
-                        if(localStack.Count < 1) {
-                            throw new StackUnderflowException();
-                        }
-                        var tos = localStack.Pop();
-                        var valStr = tos.ToString();
-                        var valStrList = new List<VmValue>();
-                        foreach(var chr in valStr) {
-                            valStrList.Add(new VmChar(chr));
-                        }
-                        localStack.Push(
-                            new VmList(valStrList[0].Types, valStrList)
-                        );
-                    }
-                    break;
-            
-                case Instruction.PopNumPushChr: {
-                        if(localStack.Count < 1) {
-                            throw new StackUnderflowException();
-                        }
-                        var tos = localStack.Pop();
-                        if(!VmValue.ShareType(tos, new VmNum(0))) {
-                            throw new TypeException(
-                                new VmValueType[] { VmValueType.Num },
-                                tos.Types
-                            );
-                        }
-
-                        localStack.Push(
-                            new VmChar((char) (tos as VmNum).Value)
-                        );
                     }
                     break;
                 
@@ -564,6 +530,24 @@ namespace snakescript {
                         }
                         
                         localStack.Push(new VmList(lsTypes, items));
+                    }
+                    break;
+                    
+                case Instruction.PopListPushUnzipped: {
+                        if(localStack.Count < 1) {
+                            throw new StackUnderflowException();
+                        }
+                        var tos = localStack.Pop();
+                        if(!(tos is VmList)) {
+                            throw new TypeException(
+                                new VmValueType[] { VmValueType.Ls }, tos.Types
+                            );
+                        }
+                        (tos as VmList).Values.Reverse();
+                        
+                        foreach(var value in (tos as VmList).Values) {
+                            localStack.Push(value);
+                        }
                     }
                     break;
             
@@ -649,6 +633,40 @@ namespace snakescript {
                                 }
                             }
                         }
+                    }
+                    break;
+                
+                case Instruction.PopAnyPushStr: {
+                        if(localStack.Count < 1) {
+                            throw new StackUnderflowException();
+                        }
+                        var tos = localStack.Pop();
+                        var valStr = tos.ToString();
+                        var valStrList = new List<VmValue>();
+                        foreach(var chr in valStr) {
+                            valStrList.Add(new VmChar(chr));
+                        }
+                        localStack.Push(
+                            new VmList(valStrList[0].Types, valStrList)
+                        );
+                    }
+                    break;
+            
+                case Instruction.PopNumPushChr: {
+                        if(localStack.Count < 1) {
+                            throw new StackUnderflowException();
+                        }
+                        var tos = localStack.Pop();
+                        if(!VmValue.ShareType(tos, new VmNum(0))) {
+                            throw new TypeException(
+                                new VmValueType[] { VmValueType.Num },
+                                tos.Types
+                            );
+                        }
+
+                        localStack.Push(
+                            new VmChar((char) (tos as VmNum).Value)
+                        );
                     }
                     break;
                 

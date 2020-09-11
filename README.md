@@ -101,7 +101,7 @@ Finally, everything else is a statement. Typically these pop one or two values o
 
 | Symbol | Description |
 |:------:|:-----------:|
-| `<<` | Pop an item off the stack return from a function and push the value back |
+| `<<` | Pop an item off the stack, return from a function, and push the value back |
 | `>>` | Pop an item off the stack |
 | `><` | Duplicate the current item on the stack |
 | `<>` | Swap the top two items on the stack

@@ -2,7 +2,7 @@ NAME :=          snakey
 PROJNAME :=      snake-script
 TARGET_FRMWRK := netcoreapp3.1
 
-SRCFLDRS :=      src src/engine src/res
+SRCFLDRS :=      src src/Parser src/Data src/VirtualMachine
 SRCFILES :=      $(foreach folder,$(SRCFLDRS),$(wildcard $(folder)/*.cs))
 
 ifdef LINUX
