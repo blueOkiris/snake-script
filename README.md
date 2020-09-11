@@ -127,6 +127,6 @@ Finally, everything else is a statement. Typically these pop one or two values o
 | `=` | Pop identifier, pop value, set identifier == value (throws error if not the same type) |
 | `()` | Pop val 2, pop val 1, push `( val1 val2 )` |
 | `$` | Pop value, push that value converted to string |
-| `\`` | Pop number, push that number as a character |
+| \` | Pop number, push that number as a character |
 | `!?` | Pop string, push extracted value. "Parse," if you will |
 | `?` | Pop number or character, push boolean value of them (like in C) |
