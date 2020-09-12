@@ -23,6 +23,8 @@ You can build the interpreter, 'snakey,' by running:
  
  * `ming32-make WIN64=1` for Windows 64-bit
 
+These require the dotnet core sdk and make (MinGW on Windows)
+
 ## Running
 
 Once the snakey compiler/interpreter is built, you can run a snake script program with the command:
