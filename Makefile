@@ -34,4 +34,3 @@ clean :
 	rm -rf obj
 	rm -rf $(OBJNAME)
 	rm -rf /var/tmp/.net
-
