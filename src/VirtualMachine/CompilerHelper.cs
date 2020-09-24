@@ -105,6 +105,18 @@ namespace snakescript {
                             break;
                     }
                     break;
+                
+                case TokenType.FileIoOp:
+                    switch((op.Children[0] as SymbolToken).Source) {
+                        case "..":
+                            opCodes.Add(new OpCode(Instruction.WriteFile));
+                            break;
+                        
+                        case ",,":
+                            opCodes.Add(new OpCode(Instruction.ReadFile));
+                            break;
+                    }
+                    break;
 
                 case TokenType.RoundOp:
                     opCodes.Add(new OpCode(Instruction.Round));

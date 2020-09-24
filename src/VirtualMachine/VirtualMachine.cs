@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Text;
 
 namespace snakescript {
@@ -109,6 +110,50 @@ namespace snakescript {
                         }
                         var tos = localStack.Pop();
                         Console.Write(tos.ToString());
+                    }
+                    break;
+                
+                case Instruction.ReadFile: {
+                        if(localStack.Count < 1) {
+                            throw new StackUnderflowException();
+                        }
+                        var tos = localStack.Pop();
+                        if(!(tos is VmList) 
+                                || (tos as VmList).Types[1] != VmValueType.Chr
+                                ) {
+                            throw new TypeException(
+                                new VmValueType[] {
+                                    VmValueType.Ls, VmValueType.Chr
+                                },
+                                tos.Types
+                            );
+                        }
+                        var input = File.ReadAllText(tos.ToString());
+                        var chars = new List<VmValue>();
+                        for(int i = 0; i < input.Length; i++) {
+                            chars.Add(new VmChar(input[i]));
+                        }
+                        localStack.Push(new VmList(chars[0].Types, chars));
+                    }
+                    break;
+                
+                case Instruction.WriteFile: {
+                        if(localStack.Count < 2) {
+                            throw new StackUnderflowException();
+                        }
+                        var tos = localStack.Pop();
+                        var sos = localStack.Pop();
+                        if(!(sos is VmList) 
+                                || (sos as VmList).Types[1] != VmValueType.Chr
+                                ) {
+                            throw new TypeException(
+                                new VmValueType[] {
+                                    VmValueType.Ls, VmValueType.Chr
+                                },
+                                sos.Types
+                            );
+                        }
+                        File.WriteAllText(sos.ToString(), tos.ToString());
                     }
                     break;
                 

@@ -13,7 +13,7 @@ namespace snakescript {
         Pop2PushConcat, Pop2PushWithRemovedInd, Pop2PushListPushListAtInd,
         PopListPushUnzipped, PopItemsOfSameTypePushList,
         SetVar,
-        Print, Input,
+        Print, Input, WriteFile, ReadFile,
         Round,
 
         Return,

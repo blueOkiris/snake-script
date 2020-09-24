@@ -8,7 +8,7 @@ namespace snakescript {
             return type == TokenType.StackOp || type == TokenType.MathOp
                 || type == TokenType.ListTupleOp || type == TokenType.BoolOp
                 || type == TokenType.RoundOp || type == TokenType.IoOp
-                || type == TokenType.AsgnOp;
+                || type == TokenType.FileIoOp || type == TokenType.AsgnOp;
         }
 
         // <stmt> ::= <op> | <while> | <func-call> | <return> | <value>
@@ -338,6 +338,9 @@ namespace snakescript {
             }, { 
                 new Regex(@"\^\^", RegexOptions.Compiled),
                 TokenType.RoundOp
+            }, { 
+                new Regex(@"(\.\.)|(,,)", RegexOptions.Compiled),
+                TokenType.FileIoOp
             }, { 
                 new Regex(@"[\.,]", RegexOptions.Compiled),
                 TokenType.IoOp
