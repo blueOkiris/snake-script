@@ -23,6 +23,11 @@ namespace snakescript {
                     }
                 }
 
+                // File name is actually a MODULE DIRECTORY
+                if(Directory.Exists(fileName)) {
+                    fileName += "/main.snake";
+                }
+
                 var code = "";
                 try {
                     code = File.ReadAllText(fileName);
