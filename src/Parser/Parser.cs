@@ -146,7 +146,8 @@ namespace snakescript {
             var lines = code.Split('\n');
             // I just wanted to see if I could do this in a python style lol
             foreach(var ind in Enumerable.Range(0, lines.Length)) {
-                if(lines[ind].Length != 80) {
+                if(lines[ind].Length != 80 
+                        && !(ind == lines.Length - 1 && lines[ind] == "")) {
                     throw new Exception(
                         "Incorrect number of characters per line! Expected 80"
                         + " characters on line " + (ind + 1));
