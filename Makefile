@@ -10,15 +10,21 @@ ifdef LINUX
     OBJNAME := $(NAME)
     BINNAME := $(PROJNAME)
 else
-    ifdef WIN32
-        RUNTIME := win-x86
-        OBJNAME := $(NAME).exe
-        BINNAME := $(PROJNAME).exe
+    ifdef LINUX_ARM
+        RUNTIME := linux-arm
+        OBJNAME := $(NAME)
+        BINNAME := $(PROJNAME)
     else
-        ifdef WIN64
-            RUNTIME := win-x64
+        ifdef WIN32
+            RUNTIME := win-x86
             OBJNAME := $(NAME).exe
             BINNAME := $(PROJNAME).exe
+        else
+            ifdef WIN64
+                RUNTIME := win-x64
+                OBJNAME := $(NAME).exe
+                BINNAME := $(PROJNAME).exe
+            endif
         endif
     endif
 endif
