@@ -96,11 +96,13 @@ namespace snakescript {
                 
                 case Instruction.Input: {
                         var input = Console.ReadLine();
-                        var chars = new List<VmValue>();
-                        for(int i = 0; i < input.Length; i++) {
-                            chars.Add(new VmChar(input[i]));
+                        if(input != "") {
+                            var chars = new List<VmValue>();
+                            for(int i = 0; i < input.Length; i++) {
+                                chars.Add(new VmChar(input[i]));
+                            }
+                            localStack.Push(new VmList(chars[0].Types, chars));
                         }
-                        localStack.Push(new VmList(chars[0].Types, chars));
                     }
                     break;
                 
