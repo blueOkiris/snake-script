@@ -122,7 +122,9 @@ Finally, everything else is a statement. Typically these pop one or two values o
 | `[]` | Pop all items of the same type, push a list of those items. "Zip" if you will |
 | `^^` | Pop a number off the stack, push that number rounded to the closest integer |
 | `.` | Pop an item off the stack, print its value |
-| `,` | Take user input, push it to the stack as a string
+| `,,` | Pop off a file name, push its contents to the stack as a string |
+| `..` | Pop off a value, pop off a file name, write tos to the file sos |
+| `,` | Take user input, push it to the stack as a string |
 | `+` | Pop number 2, pop number 1, push number 1 + number 2 |
 | `-` | Pop num 2, pop num 1, push num 1 - num 2 |
 | `*` | Pop num 2, pop num 1, push num 1 * num 2 |
