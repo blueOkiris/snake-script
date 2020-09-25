@@ -40,4 +40,4 @@ clean :
 	rm -rf obj
 	rm -rf $(OBJNAME)
 	rm -rf /var/tmp/.net
-    rm -rf test.txt
+	rm -rf test.txt
