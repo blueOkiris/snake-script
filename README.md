@@ -97,6 +97,14 @@ So the syntax is:
 
 See the truth machine example to understand this in full
 
+### Imports
+
+It's possible to load functions (and run code) from another file.
+
+If you use the `import` function just like you'd call other functions (it takes a string btw), then it will compile and run all the code in your provided file, and it will add the functions in the file into your file. File locations are based on the current file's directory, not the running directory.
+
+You can call full on modules by creating a main script and calling the folder (for instance, the 'moduletest' example can be run with `snakey examples/moduletest` instead of `snakey examples/moduletest/main.snake`)
+
 ### Statements
 
 Finally, everything else is a statement. Typically these pop one or two values off of the stack and push something back.
