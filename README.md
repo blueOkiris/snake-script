@@ -19,6 +19,8 @@ You can build the interpreter, 'snakey,' by running:
 
  * `make LINUX=1` for Linux
  
+ * `make LINUX_ARM=1` for Linux Arm (like Beaglebone)
+ 
  * `mingw32-make WIN32=1` for Windows 32-bit
  
  * `ming32-make WIN64=1` for Windows 64-bit
