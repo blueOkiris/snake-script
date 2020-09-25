@@ -846,23 +846,86 @@ namespace snakescript {
                         if(localStack.Count < 1) {
                             throw new StackUnderflowException();
                         }
-                        var tos = localStack.Pop();
-                        var newLocal = new Stack<VmValue>();
-                        newLocal.Push(tos);
 
-                        var function = Functions[opCode.Argument];
-                        if(!VmValue.ShareType(
-                                tos, new VmValue(function.InputTypes))) {
-                            throw new TypeException(
-                                function.InputTypes, tos.Types
+                        if(opCode.Argument == "import") {
+                            if(localStack.Count < 1) {
+                                throw new StackUnderflowException();
+                            }
+                            var tos = localStack.Pop();
+                            if(!(tos is VmList) 
+                                    || (tos as VmList).Types[1]
+                                        != VmValueType.Chr) {
+                                throw new TypeException(
+                                    new VmValueType[] {
+                                        VmValueType.Ls, VmValueType.Chr
+                                    },
+                                    tos.Types
+                                );
+                            }
+
+                            // Compile and run module file
+                            var code = "";
+                            try {
+                                code = File.ReadAllText(tos.ToString());
+                            } catch(Exception e) {
+                                Console.WriteLine(
+                                    "Error reading file: '"
+                                    + tos.ToString() + "'"
+                                );
+                                Console.WriteLine(e.Message);
+                                Environment.Exit(-1);
+                            }
+                            var deSnakedCode = "";
+                            try {
+                                deSnakedCode = Lexer.DeSnakeCode(code);
+                            } catch(Exception e) {
+                                Console.WriteLine(
+                                    "Desnaking Error: " + e.Message
+                                );
+                                Environment.Exit(-1);
+                            }
+                            var tokens = Lexer.Tokens(deSnakedCode);
+                            CompoundToken ast = null;
+                            try {
+                                ast = Parser.BuildProgram(tokens);
+                            } catch(ParserException pe) {
+                                Console.WriteLine("Parser Error: " + pe.Message);
+                                Environment.Exit(-1);
+                            }
+                            var insts = Compiler.Translate(ast);
+                            var vm = new VirtualMachine(
+                                insts.Item1, insts.Item2, Debug
                             );
-                        }
+                            try {
+                                vm.Run();
+                            } catch(Exception e) {
+                                Console.WriteLine("Runtime Error: " + e.Message);
+                                Environment.Exit(-1);
+                            }
 
-                        CallStack.Push(stackFrame);
-                        stackFrame = new VmStackFrame(
-                            newLocal, function.OpCodes, function.OutputTypes
-                        );
-                        stackFrame.InstructionCounter = -1;
+                            // Then copy the functions over into our file
+                            foreach(var funcName in vm.Functions.Keys) {
+                                Functions.Add(funcName, vm.Functions[funcName]);
+                            }
+                        } else {
+                            var tos = localStack.Pop();
+                            var newLocal = new Stack<VmValue>();
+                            newLocal.Push(tos);
+
+                            var function = Functions[opCode.Argument];
+                            if(!VmValue.ShareType(
+                                    tos, new VmValue(function.InputTypes))) {
+                                throw new TypeException(
+                                    function.InputTypes, tos.Types
+                                );
+                            }
+
+                            CallStack.Push(stackFrame);
+                            stackFrame = new VmStackFrame(
+                                newLocal, function.OpCodes, function.OutputTypes
+                            );
+                            stackFrame.InstructionCounter = -1;
+                        }
                     }
                     break;
                 

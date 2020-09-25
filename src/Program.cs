@@ -70,6 +70,9 @@ namespace snakescript {
                 var vm = new VirtualMachine(insts.Item1, insts.Item2, debug);
                 
                 try {
+                    Directory.SetCurrentDirectory(
+                        Path.GetDirectoryName(fileName)
+                    );
                     vm.Run();
                 } catch(Exception e) {
                     Console.WriteLine("Runtime Error: " + e.Message);
