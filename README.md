@@ -105,6 +105,8 @@ If you use the `import` function just like you'd call other functions (it takes 
 
 You can call full on modules by creating a main script and calling the folder (for instance, the 'moduletest' example can be run with `snakey examples/moduletest` instead of `snakey examples/moduletest/main.snake`)
 
+You can also load C# functions from a file. It is dynamically compiled and added to the lists. The way you do that is with the special function `importexternal`
+
 ### Statements
 
 Finally, everything else is a statement. Typically these pop one or two values off of the stack and push something back.

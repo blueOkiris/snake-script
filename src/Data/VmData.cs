@@ -212,8 +212,45 @@ namespace snakescript {
             return 0;
         }
 
+        public virtual object GetValue() {
+            return null;
+        }
+
         public override string ToString() {
             return "generic value";
+        }
+
+        public static VmValue FromObject(object obj) {
+            if(obj is double) {
+                return new VmNum((double) obj);
+            } else if(obj is char) {
+                return new VmChar((char) obj);
+            } else if(obj is bool) {
+                return new VmBool((bool) obj);
+            } else if(obj is List<object>) {
+                var values = new List<VmValue>();
+                var subTypes = new List<VmValueType>();
+                foreach(var subObj in (obj as List<object>)) {
+                    var val = VmValue.FromObject(subObj);
+                    if(subTypes.Count < 1) {
+                        foreach(var type in val.Types) {
+                            subTypes.Add(type);
+                        }
+                    }
+                    values.Add(val);
+                }
+                return new VmList(subTypes.ToArray(), values);
+            } else if(obj is Tuple<object, object>) {
+                var item1 = VmValue.FromObject(
+                    (obj as Tuple<object, object>).Item1
+                );
+                var item2 = VmValue.FromObject(
+                    (obj as Tuple<object, object>).Item2
+                );
+                return new VmTuple(item1, item2, item1.Types, item2.Types);
+            } else {
+                return new VmUnDef();
+            }
         }
     }
 
@@ -228,6 +265,10 @@ namespace snakescript {
         public override string ToString() {
             return "" + Value;
         }
+
+        public override object GetValue() {
+            return Value;
+        }
     }
 
     class VmNum : VmValue {
@@ -240,6 +281,10 @@ namespace snakescript {
 
         public override string ToString() {
             return "" + Value;
+        }
+
+        public override object GetValue() {
+            return Value;
         }
     }
 
@@ -254,6 +299,10 @@ namespace snakescript {
         public override string ToString() {
             return Value ? "true" : "false";
         }
+
+        public override object GetValue() {
+            return Value;
+        }
     }
 
     class VmUnDef : VmValue {
@@ -262,6 +311,10 @@ namespace snakescript {
 
         public override string ToString() {
             return "undefined";
+        }
+
+        public override object GetValue() {
+            return null;
         }
     }
 
@@ -281,6 +334,10 @@ namespace snakescript {
             } else {
                 return Value.ToString();
             }
+        }
+
+        public override object GetValue() {
+            return Value;
         }
     }
 
@@ -319,6 +376,14 @@ namespace snakescript {
                 return listStr.ToString();
             }
         }
+
+        public override object GetValue() {
+            var listValue = new List<object>();
+            foreach(var value in Values) {
+                listValue.Add(value);
+            }
+            return listValue;
+        }
     }
 
     class VmTuple : VmValue {
@@ -352,6 +417,10 @@ namespace snakescript {
             tupStr.Append(Item2.ToString());
             tupStr.Append(" )");
             return tupStr.ToString();
+        }
+
+        public override object GetValue() {
+            return ( Item1, Item2 );
         }
     }
 }

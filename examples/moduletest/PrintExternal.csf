@@ -1,0 +1,4 @@
+(object input) => {
+    System.Console.Write(input);
+    return input;
+}

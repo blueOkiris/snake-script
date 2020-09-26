@@ -8,6 +8,7 @@ namespace snakescript {
         public Stack<VmStackFrame> CallStack;
         public OpCode[] OpCodes;
         public Dictionary<string, Function> Functions;
+        public Dictionary<string, NativeFunction> NativeFunctions;
         public bool Debug;
 
         public VirtualMachine(OpCode[] opCodes, Function[] functions,
@@ -17,7 +18,9 @@ namespace snakescript {
             Functions = new Dictionary<string, Function>();
             foreach(var function in functions) {
                 Functions.Add(function.Name, function);
-            }Debug = debug;
+            }
+            NativeFunctions = new Dictionary<string, NativeFunction>();
+            Debug = debug;
         }
 
         private void execute(OpCode opCode, ref VmStackFrame stackFrame) {
@@ -843,11 +846,26 @@ namespace snakescript {
                     break;
                 
                 case Instruction.FuncCall: {
-                        if(localStack.Count < 1) {
-                            throw new StackUnderflowException();
-                        }
-
-                        if(opCode.Argument == "import") {
+                        if(opCode.Argument == "import_external") {
+                            if(localStack.Count < 1) {
+                                throw new StackUnderflowException();
+                            }
+                            var tos = localStack.Pop();
+                            if(!(tos is VmList) 
+                                    || (tos as VmList).Types[1]
+                                        != VmValueType.Chr) {
+                                throw new TypeException(
+                                    new VmValueType[] {
+                                        VmValueType.Ls, VmValueType.Chr
+                                    },
+                                    tos.Types
+                                );
+                            }
+                            var function = new NativeFunction(
+                                tos.ToString() + ".csf", tos.ToString()
+                            );
+                            NativeFunctions.Add(tos.ToString(), function);
+                        } else if(opCode.Argument == "import") {
                             if(localStack.Count < 1) {
                                 throw new StackUnderflowException();
                             }
@@ -908,23 +926,36 @@ namespace snakescript {
                                 Functions.Add(funcName, vm.Functions[funcName]);
                             }
                         } else {
-                            var tos = localStack.Pop();
-                            var newLocal = new Stack<VmValue>();
-                            newLocal.Push(tos);
+                            if(NativeFunctions.ContainsKey(opCode.Argument)) {
+                                if(localStack.Count < 1) {
+                                    throw new StackUnderflowException();
+                                }
+                                var tos = localStack.Pop();
 
-                            var function = Functions[opCode.Argument];
-                            if(!VmValue.ShareType(
-                                    tos, new VmValue(function.InputTypes))) {
-                                throw new TypeException(
-                                    function.InputTypes, tos.Types
+                                var function = NativeFunctions[opCode.Argument];
+                                localStack.Push(function.Execute(tos));
+                            } else {
+                                var tos = localStack.Pop();
+                                var newLocal = new Stack<VmValue>();
+                                newLocal.Push(tos);
+
+                                var function = Functions[opCode.Argument];
+                                if(!VmValue.ShareType(
+                                            tos,
+                                            new VmValue(function.InputTypes)
+                                        )) {
+                                    throw new TypeException(
+                                        function.InputTypes, tos.Types
+                                    );
+                                }
+
+                                CallStack.Push(stackFrame);
+                                stackFrame = new VmStackFrame(
+                                    newLocal, function.OpCodes,
+                                    function.OutputTypes
                                 );
+                                stackFrame.InstructionCounter = -1;
                             }
-
-                            CallStack.Push(stackFrame);
-                            stackFrame = new VmStackFrame(
-                                newLocal, function.OpCodes, function.OutputTypes
-                            );
-                            stackFrame.InstructionCounter = -1;
                         }
                     }
                     break;

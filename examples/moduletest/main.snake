@@ -1,1 +1,3 @@
-'factorial.snake'(import)'Enter number to factorialize: '.,!?(fac).'\n'.        
+'factorial.snake'(import)'PrintExternal'(import_external)                       
+                                                                                
+'Enter number to factorialize: '.,!?(fac)$['\n']++(PrintExternal)               
