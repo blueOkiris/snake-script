@@ -29,6 +29,19 @@ else
     endif
 endif
 
+LINUX_RUNTIMES := linux-x64 linux-arm
+WIN_RUNTIMES := win-x86 win-x64
+.PHONY : all
+all : $(SRCFILES)
+	dotnet publish $(PROJNAME).csproj -f $(TARGET_FRMWRK) -p:PublishSingleFile=true -r linux-x64
+	cp bin/Debug/$(TARGET_FRMWRK)/linux-x64/publish/$(PROJNAME) ./snakey-linux-x64
+	dotnet publish $(PROJNAME).csproj -f $(TARGET_FRMWRK) -p:PublishSingleFile=true -r linux-arm
+	cp bin/Debug/$(TARGET_FRMWRK)/linux-arm/publish/$(PROJNAME) ./snakey-linux-arm
+	dotnet publish $(PROJNAME).csproj -f $(TARGET_FRMWRK) -p:PublishSingleFile=true -r win-x86
+	cp bin/Debug/$(TARGET_FRMWRK)/win-x86/publish/$(PROJNAME).exe ./snakey-win-x86.exe
+	dotnet publish $(PROJNAME).csproj -f $(TARGET_FRMWRK) -p:PublishSingleFile=true -r win-x64
+	cp bin/Debug/$(TARGET_FRMWRK)/win-x86/publish/$(PROJNAME).exe ./snakey-win-x64.exe
+
 $(OBJNAME) : $(SRCFILES)
 	dotnet publish $(PROJNAME).csproj -f $(TARGET_FRMWRK) -p:PublishSingleFile=true -r $(RUNTIME)
 	cp bin/Debug/$(TARGET_FRMWRK)/$(RUNTIME)/publish/$(BINNAME) ./$(OBJNAME)
